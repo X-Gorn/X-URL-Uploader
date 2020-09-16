@@ -9,6 +9,18 @@ Telegram RoBot to Upload Links.
 
 👉 Upload HTTP/HTTPS as File/Video to Telegram.
 
+**Heroku Buildpacks**
+```
+https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest
+```
+```
+https://github.com/opendoor-labs/heroku-buildpack-p7zip
+```
+```
+heroku/python
+```
+
+
 ## Credits, and Thanks to
 
 * [@TGExplore](https://t.me/ViruZs) for his [TG-URL-Uploader](https://github.com/TGExplore/TG-URL-Uploader)
