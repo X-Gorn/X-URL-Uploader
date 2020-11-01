@@ -1,13 +1,12 @@
 class Translation(object):
     START_TEXT = """Hi,
 I'm X-URL Uploader!
+You can upload HTTP/HTTPS direct link, Using this bot!
 
-<b>Please send me any direct download URL Link, i can upload to telegram as File/Video</b>
-
-/help for more details.."""
+/help for more details!"""
     RENAME_403_ERR = "Sorry. You are not permitted to rename this file."
     ABS_TEXT = " Please don't be selfish."
-    UPGRADE_TEXT = "No Plan!"
+    UPGRADE_TEXT = "No Plan"
     FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a> \nIf you want to set custom thumbnail, send photo before or quickly after tapping on any of the below buttons.\nYou can use /deletethumbnail to delete the auto-generated thumbnail."
     SET_CUSTOM_USERNAME_PASSWORD = """If you want to download premium videos, provide in the following format:
 URL | filename | username | password"""
@@ -24,18 +23,18 @@ URL | filename | username | password"""
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     FF_MPEG_DEL_ETED_CUSTOM_MEDIA = "✅ Media cleared succesfully."
     SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully."
-    CUSTOM_CAPTION_UL_FILE = " "
+    CUSTOM_CAPTION_UL_FILE = "@xurluploaderbot"
     NO_CUSTOM_THUMB_NAIL_FOUND = "No Custom ThumbNail found."
     NO_VOID_FORMAT_FOUND = "ERROR...\n<b>YouTubeDL</b> said: {}"
     USER_ADDED_TO_DB = "User <a href='tg://user?id={}'>{}</a> added to {} till {}."
     CURENT_PLAN_DETAILS = """Current plan details
 --------
 Telegram ID: <code>{}</code>
-Plan name: Free Cloned User
+Plan name: Free Forever Fucking User
 Expires on: 31/12/2020"""
-    HELP_USER = """Hi I'm X-URL Uploader..
+    HELP_USER = """How to Use Me? Follow These steps!
     
-1. Send url (X-File.mp4| X-NewFileName.mp4).
+1. Send url (example.domain/File.mp4 | New Filename.mp4).
 2. Send Image As Custom Thumbnail (Optional).
 3. Select the button.
    SVideo - Give File as video with Screenshots
