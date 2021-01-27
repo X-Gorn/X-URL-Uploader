@@ -20,7 +20,6 @@ https://github.com/opendoor-labs/heroku-buildpack-p7zip
 heroku/python
 ```
 
-Note: If you are deploy the bot on heroku, you should use Heroku-18 Stack, you can't deploy it if using Heroku-20 Stack. Sorry my English is bad. Thank you for your attention.
 
 ## Credits, and Thanks to
 
