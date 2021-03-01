@@ -35,7 +35,6 @@ from pyrogram.client.types import InlineKeyboardButton, InlineKeyboardMarkup
 from translation import Translation
 
 
-@pyrogram.Client.on_message(filters.command('start'))
 async def start(bot, message):
     """Start command handler"""
     buttons = [[
