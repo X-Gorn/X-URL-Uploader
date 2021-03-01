@@ -1,9 +1,10 @@
 import os
 import logging
-from pyrogram.client import Client
+import pyrogram
+from pyrogram.client import Client 
 from pyrogram.client.filters import filters
 from pyrogram.client.types import InlineKeyboardButton, InlineKeyboardMarkup
-from translation import START_TEXT
+from translation import Translation
 
 logger = logging.getLogger(__name__)
 
@@ -16,5 +17,4 @@ async def start(bot, message):
         InlineKeyboardButton('Master', url='https://t.me/xgorn'),
     ]]
     reply_markup = InlineKeyboardMarkup(buttons)
-    await message.reply(START_TEXT, reply_markup=reply_markup)
-
+    await message.reply(Translation.START_TEXT, reply_markup=reply_markup)
