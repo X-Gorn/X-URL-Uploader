@@ -23,6 +23,8 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
+from pyrogram.client.types import InlineKeyboardButton, InlineKeyboardMarkup
+
 from helper_funcs.chat_base import TRChatBase
 
 def GetExpiryDate(chat_id):
@@ -66,6 +68,17 @@ async def start(bot, update):
     await bot.send_message(
         chat_id=update.chat.id,
         text=Translation.START_TEXT,
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Source", url="https://github.com/X-Gorn/X-URL-Uploader"
+                    ),
+                    InlineKeyboardButton("Project Channel", url="https://t.me/xTeamBots"),
+                ],
+                [InlineKeyboardButton("Author", url="https://t.me/xgorn")],
+            ]
+        ),
         reply_to_message_id=update.message_id
     )
 
