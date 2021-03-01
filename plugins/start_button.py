@@ -1,5 +1,6 @@
 import os
 import logging
+from pyrogram.client import Client
 from pyrogram.client.filters import filters
 from pyrogram.client.types import InlineKeyboardButton, InlineKeyboardMarkup
 from translation import START_TEXT
@@ -16,5 +17,4 @@ async def start(bot, message):
     ]]
     reply_markup = InlineKeyboardMarkup(buttons)
     await message.reply(START_TEXT, reply_markup=reply_markup)
-
 
