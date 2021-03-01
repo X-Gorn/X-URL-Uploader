@@ -1,7 +1,7 @@
 import os
 import logging
-from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.client.filters import filters
+from pyrogram.client.types import InlineKeyboardButton, InlineKeyboardMarkup
 from translation import START_TEXT
 
 logger = logging.getLogger(__name__)
