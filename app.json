@@ -14,7 +14,7 @@
     "remote",
     "uploader"
   ],
-  "success_url": "https://t.me/xurluploader",
+  "success_url": "https://t.me/xurluploaderbot",
   "website": "https://github.com/X-Gorn",
   "repository": "https://github.com/X-Gorn/X-URL-Uploader",
   "env": {
