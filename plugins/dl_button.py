@@ -29,7 +29,6 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-from helper_funcs.chat_base import TRChatBase
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -74,7 +73,9 @@ async def ddl_call_back(bot, update):
                 o = entity.offset
                 l = entity.length
                 youtube_dl_url = youtube_dl_url[o:o + l]
-    description = Translation.CUSTOM_CAPTION_UL_FILE
+    user = await bot.get_me()
+    mention = user["mention"]
+    description = Translation.CUSTOM_CAPTION_UL_FILE.format(mention)
     start = datetime.now()
     await bot.edit_message_text(
         text=Translation.DOWNLOAD_START,
@@ -166,10 +167,12 @@ async def ddl_call_back(bot, update):
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
-                await bot.send_audio(
+                user = await bot.get_me()
+                mention = user["mention"]
+                audio = await bot.send_audio(
                     chat_id=update.message.chat.id,
                     audio=download_directory,
-                    caption=description,
+                    caption=description + f"\n\nSubmitted by {update.from_user.mention}\nUploaded by {mention}",
                     duration=duration,
                     # performer=response_json["uploader"],
                     # title=response_json["title"],
@@ -183,12 +186,15 @@ async def ddl_call_back(bot, update):
                         start_time
                     )
                 )
+                await audio.forward(Config.LOG_CHANNEL)
             elif tg_send_type == "file":
-                await bot.send_document(
+                user = await bot.get_me()
+                mention = user["mention"]
+                document = await bot.send_document(
                     chat_id=update.message.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
-                    caption=description,
+                    caption=description + f"\n\nSubmitted by {update.from_user.mention}\nUploaded by {mention}",
                     # reply_markup=reply_markup,
                     reply_to_message_id=update.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
@@ -198,8 +204,11 @@ async def ddl_call_back(bot, update):
                         start_time
                     )
                 )
+                await document.forward(Config.LOG_CHANNEL)
             elif tg_send_type == "vm":
-                await bot.send_video_note(
+                user = await bot.get_me()
+                mention = user["mention"]
+                video_note = await bot.send_video_note(
                     chat_id=update.message.chat.id,
                     video_note=download_directory,
                     duration=duration,
@@ -213,11 +222,15 @@ async def ddl_call_back(bot, update):
                         start_time
                     )
                 )
+                vm = await video_note.forward(Config.LOG_CHANNEL)
+                await vm.reply_text(f"Submitted by {update.from_user.mention}\nUploaded by {mention}")
             elif tg_send_type == "video":
-                await bot.send_video(
+                user = await bot.get_me()
+                mention = user["mention"]
+                video = await bot.send_video(
                     chat_id=update.message.chat.id,
                     video=download_directory,
-                    caption=description,
+                    caption=description + f"\n\nSubmitted by {update.from_user.mention}\nUploaded by {mention}",
                     duration=duration,
                     width=width,
                     height=height,
@@ -232,6 +245,7 @@ async def ddl_call_back(bot, update):
                         start_time
                     )
                 )
+                await video.forward(Config.LOG_CHANNEL)
             else:
                 logger.info("Did this happen? :\\")
             end_two = datetime.now()

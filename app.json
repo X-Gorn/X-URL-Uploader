@@ -26,10 +26,6 @@
       "description": "Your bot token, as a string.",
       "value": ""
     },
-    "CHAT_BASE_TOKEN": {
-      "description": "Your chat base token, as a string.",
-      "value": ""
-    },
     "APP_ID": {
       "description": "Get this value from https://my.telegram.org",
       "value": ""
@@ -49,6 +45,11 @@
     },
     "UPDATE_CHANNEL": {
       "description": "For Force Subscribe. Paste your Update channel USERNAME (without @)..",
+      "value": "",
+      "required": false
+    },
+    "LOG_CHANNEL": {
+      "description": "Your Log Channel ID",
       "value": "",
       "required": false
     },

@@ -26,7 +26,6 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-from helper_funcs.chat_base import TRChatBase
 from helper_funcs.display_progress import humanbytes
 from helper_funcs.help_uploadbot import DownLoadFile
 
@@ -38,7 +37,6 @@ async def echo(bot, update):
     if update.from_user.id in Config.BANNED_USERS:
         await update.reply_text("You are BANNED")
         return
-    TRChatBase(update.from_user.id, update.text, "/echo")
     update_channel = Config.UPDATE_CHANNEL
     if update_channel:
         try:

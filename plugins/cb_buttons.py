@@ -27,7 +27,6 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-from helper_funcs.chat_base import TRChatBase
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes
 from plugins.youtube_dl_button import youtube_dl_call_back
 from plugins.dl_button import ddl_call_back
