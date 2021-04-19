@@ -248,12 +248,10 @@ async def youtube_dl_call_back(bot, update):
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
-                user = await bot.get_me()
-                mention = user["mention"]
                 audio = await bot.send_audio(
                     chat_id=update.message.chat.id,
                     audio=download_directory,
-                    caption=description + f"\n\nSubmitted by {update.from_user.mention}\nUploaded by {mention}",
+                    caption=description,
                     parse_mode="HTML",
                     duration=duration,
                     # performer=response_json["uploader"],
@@ -268,15 +266,14 @@ async def youtube_dl_call_back(bot, update):
                         start_time
                     )
                 )
-                await audio.forward(Config.LOG_CHANNEL)
+                audio_f = await audio.forward(Config.LOG_CHANNEL)
+                await audio_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
             elif tg_send_type == "file":
-                user = await bot.get_me()
-                mention = user["mention"]
                 document = await bot.send_document(
                     chat_id=update.message.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
-                    caption=description + f"\n\nSubmitted by {update.from_user.mention}\nUploaded by {mention}",
+                    caption=description,
                     parse_mode="HTML",
                     # reply_markup=reply_markup,
                     reply_to_message_id=update.message.reply_to_message.message_id,
@@ -287,10 +284,9 @@ async def youtube_dl_call_back(bot, update):
                         start_time
                     )
                 )
-                await document.forward(Config.LOG_CHANNEL)
+                document_f = await document.forward(Config.LOG_CHANNEL)
+                await document_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
             elif tg_send_type == "vm":
-                user = await bot.get_me()
-                mention = user["mention"]
                 video_note = await bot.send_video_note(
                     chat_id=update.message.chat.id,
                     video_note=download_directory,
@@ -305,15 +301,13 @@ async def youtube_dl_call_back(bot, update):
                         start_time
                     )
                 )
-                vm = await video_note.forward(Config.LOG_CHANNEL)
-                await vm.reply_text(f"Submitted by {update.from_user.mention}\nUploaded by {mention}")
+                video_note_f = await video_note.forward(Config.LOG_CHANNEL)
+                await video_note_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
             elif tg_send_type == "video":
-                user = await bot.get_me()
-                mention = user["mention"]
                 video = await bot.send_video(
                     chat_id=update.message.chat.id,
                     video=download_directory,
-                    caption=description + f"\n\nSubmitted by {update.from_user.mention}\nUploaded by {mention}",
+                    caption=description,
                     parse_mode="HTML",
                     duration=duration,
                     width=width,
@@ -329,7 +323,8 @@ async def youtube_dl_call_back(bot, update):
                         start_time
                     )
                 )
-                await video.forward(Config.LOG_CHANNEL)
+                video_f = await video.forward(Config.LOG_CHANNEL)
+                await video_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
             else:
                 logger.info("Did this happen? :\\")
             end_two = datetime.now()
