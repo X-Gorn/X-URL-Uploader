@@ -14,7 +14,7 @@
     "remote",
     "uploader"
   ],
-  "success_url": "https://t.me/xurluploader",
+  "success_url": "https://t.me/xurluploaderbot",
   "website": "https://github.com/X-Gorn",
   "repository": "https://github.com/X-Gorn/X-URL-Uploader",
   "env": {
@@ -26,10 +26,6 @@
       "description": "Your bot token, as a string.",
       "value": ""
     },
-    "CHAT_BASE_TOKEN": {
-      "description": "Your chat base token, as a string.",
-      "value": ""
-    },
     "APP_ID": {
       "description": "Get this value from https://my.telegram.org",
       "value": ""
@@ -39,18 +35,8 @@
       "value": ""
     },
     "AUTH_USERS": {
-      "description": "allow only pre-defined users to use this bot",
-      "value": ""
-    },
-    "BANNED_USERS": {
-      "description": "Banned Unwanted members..",
-      "value": "",
-      "required": false
-    },
-    "UPDATE_CHANNEL": {
-      "description": "For Force Subscribe. Paste your Update channel USERNAME (without @)..",
-      "value": "",
-      "required": false
+      "description": "allow only pre-defined users to use this bot (your id).",
+      "value": "87371682 98736827 72736723"
     },
     "DEF_THUMB_NAIL_VID_S": {
       "description": "default thumbnail to be used in the videos. Incase, youtube-dl is unable to find a thumbnail.",

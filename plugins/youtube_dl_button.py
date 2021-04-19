@@ -28,7 +28,7 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-from helper_funcs.chat_base import TRChatBase
+from pyrogram.types import InputMediaPhoto
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -102,7 +102,9 @@ async def youtube_dl_call_back(bot, update):
         chat_id=update.message.chat.id,
         message_id=update.message.message_id
     )
-    description = Translation.CUSTOM_CAPTION_UL_FILE
+    user = await bot.get_me()
+    mention = user["mention"]
+    description = Translation.CUSTOM_CAPTION_UL_FILE.format(mention)
     if "fulltitle" in response_json:
         description = response_json["fulltitle"][0:1021]
         # escape Markdown and special characters
@@ -325,12 +327,12 @@ async def youtube_dl_call_back(bot, update):
                 i = 0
                 caption = "© @xTeamBots"
                 if is_w_f:
-                    caption = "/upgrade to Plan D to remove the watermark\n© @AnyDLBot"
+                    caption = "@xurluploaderbot"
                 for image in images:
-                    if os.path.exists(image):
+                    if os.path.exists(str(image)):
                         if i == 0:
                             media_album_p.append(
-                                pyrogram.InputMediaPhoto(
+                                InputMediaPhoto(
                                     media=image,
                                     caption=caption,
                                     parse_mode="html"
@@ -338,7 +340,7 @@ async def youtube_dl_call_back(bot, update):
                             )
                         else:
                             media_album_p.append(
-                                pyrogram.InputMediaPhoto(
+                                InputMediaPhoto(
                                     media=image
                                 )
                             )
