@@ -185,7 +185,7 @@ async def ddl_call_back(bot, update):
                     )
                 )
                 audio_f = await audio.forward(Config.LOG_CHANNEL)
-                await audio_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
+                await audio_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>")
             elif tg_send_type == "file":
                 document = await bot.send_document(
                     chat_id=update.message.chat.id,
@@ -202,7 +202,7 @@ async def ddl_call_back(bot, update):
                     )
                 )
                 document_f = await document.forward(Config.LOG_CHANNEL)
-                await document_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
+                await document_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>")
             elif tg_send_type == "vm":
                 video_note = await bot.send_video_note(
                     chat_id=update.message.chat.id,
@@ -219,7 +219,7 @@ async def ddl_call_back(bot, update):
                     )
                 )
                 video_note_f = await video_note.forward(Config.LOG_CHANNEL)
-                await video_note_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
+                await video_note_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>")
             elif tg_send_type == "video":
                 video = await bot.send_video(
                     chat_id=update.message.chat.id,
@@ -240,7 +240,7 @@ async def ddl_call_back(bot, update):
                     )
                 )
                 await video.forward(Config.LOG_CHANNEL)
-                await video_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + str(update.from_user.id))
+                await video_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>")
             else:
                 logger.info("Did this happen? :\\")
             end_two = datetime.now()
