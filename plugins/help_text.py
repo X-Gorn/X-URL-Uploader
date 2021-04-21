@@ -45,7 +45,7 @@ async def start(bot, update):
         # logger.info(update)
         await bot.send_message(
             chat_id=update.chat.id,
-            text=Translation.START_TEXT.format(update.from_user.id),
+            text=Translation.START_TEXT.format(update.from_user.first_name),
             reply_markup=InlineKeyboardMarkup(
                 [
                     [
