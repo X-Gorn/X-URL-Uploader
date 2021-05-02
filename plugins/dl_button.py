@@ -239,7 +239,7 @@ async def ddl_call_back(bot, update):
                         start_time
                     )
                 )
-                await video.forward(Config.LOG_CHANNEL)
+                video_f = await video.forward(Config.LOG_CHANNEL)
                 await video_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>")
             else:
                 logger.info("Did this happen? :\\")
