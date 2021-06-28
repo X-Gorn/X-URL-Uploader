@@ -6,7 +6,7 @@ from helper_funcs.helper import get_text, run_cmd
 @Client.on_message(filters.command('zdl'))
 async def _zippydl(bot, update):
     zurl = get_text(update)
-    zs_dir = f'./zippyshare/{update.from_user.id}/
+    zs_dir = f'./zippyshare/{update.from_user.id}/'
     if os.path.isdir(zs_dir)
         pass
     else:
