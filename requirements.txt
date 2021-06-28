@@ -8,3 +8,4 @@ requests==2.25.1
 tgcrypto==1.2.2
 youtube-dl==2021.6.6
 olefile==0.46
+zippyshare-downloader==0.0.20
