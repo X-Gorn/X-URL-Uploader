@@ -91,28 +91,30 @@ async def echo(bot, update):
         await pablo.edit_text('Downloading...')
         open(dldir, 'wb').write(r.content)
         await pablo.edit_text('Uploading...')
-        if filetype.guess.mime(dldir) == 'image/jpeg':
+        file = filetype.guess(dldir)
+        xfiletype = file.mime
+        if xfiletype == 'image/jpeg':
             await bot.send_photo(
                 update.chat.id,
                 dldir,
                 name,
                 reply_to_message_id=update.message_id
             )
-        elif filetype.guess.mime(dldir) == 'video/mp4' or 'video/x-matroska' or 'video/webm':
+        elif xfiletype == 'video/mp4' or 'video/x-matroska' or 'video/webm':
             await send_video(
                 update.chat.id,
                 dldir,
                 name,
                 reply_to_message_id=update.message_id
             )
-        elif filetype.guess.mime(dldir) == 'audio/mpeg':
+        elif xfiletype == 'audio/mpeg':
             await send_audio(
                 update.chat.id,
                 dldir,
                 name,
                 reply_to_message_id=update.message_id
             )
-        elif filetype.guess.mime(dldir) == 'image/gif':
+        elif xfiletype == 'image/gif':
             await send_animation(
                 update.chat.id,
                 dldir,
