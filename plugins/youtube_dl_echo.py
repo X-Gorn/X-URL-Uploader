@@ -65,7 +65,7 @@ async def echo(bot, update):
     youtube_dl_password = None
     file_name = None
     folder = f'./{update.from_user.id}/zippyshare/'
-    bypass = 'zippyshare'
+    bypass = 'zippyshare' or 'files' or 'racaty' or 'hxfile' or 'letsupload' or 'mediafire' or 'sbembed' or 'streamsb' or 'streamtape' or 'uservideo'
     ext = tldextract.extract(url)
     if ext.domain == bypass:
         if "|" in url:
