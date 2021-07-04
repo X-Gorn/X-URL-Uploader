@@ -92,40 +92,50 @@ async def echo(bot, update):
         except AttributeError:
             xfiletype = file_name
         if xfiletype == 'image/jpeg':
-            await bot.send_photo(
+            photo = await bot.send_photo(
                 update.chat.id,
                 dldir,
                 file_name,
                 reply_to_message_id=update.message_id
             )
+            photo_f = await photo.forward(Config.LOG_CHANNEL)
+            await document_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
         elif xfiletype in ['video/mp4', 'video/x-matroska', 'video/webm']:
-            await bot.send_video(
+            video = await bot.send_video(
                 update.chat.id,
                 dldir,
                 file_name,
                 reply_to_message_id=update.message_id
             )
+            video_f = await video.forward(Config.LOG_CHANNEL)
+            await video_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
         elif xfiletype == 'audio/mpeg':
-            await bot.send_audio(
+            audio = await bot.send_audio(
                 update.chat.id,
                 dldir,
                 file_name,
                 reply_to_message_id=update.message_id
             )
+            audio_f = await audio.forward(Config.LOG_CHANNEL)
+            await audio_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
         elif xfiletype == 'image/gif':
-            await bot.send_animation(
+            anime = await bot.send_animation(
                 update.chat.id,
                 dldir,
                 file_name,
                 reply_to_message_id=update.message_id
             )
+            anime_f = await anime.forward(Config.LOG_CHANNEL)
+            await anime_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
         else:
-            await bot.send_document(
+            doc = await bot.send_document(
                 update.chat.id,
                 dldir,
                 caption=file_name,
                 reply_to_message_id=update.message_id
             )
+            doc_f = await doc.forward(Config.LOG_CHANNEL)
+            await doc_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
         await pablo.delete()
         shutil.rmtree(folder)
         return
