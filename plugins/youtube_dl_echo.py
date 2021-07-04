@@ -9,8 +9,6 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 import filetype
-import urllib.parse
-import lk21
 import tldextract
 import asyncio
 import json
@@ -31,7 +29,7 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-from helper_funcs.display_progress import humanbytes
+from helper_funcs.display_progress import humanbytes, lk21_run
 from helper_funcs.help_uploadbot import DownLoadFile
 
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -82,14 +80,7 @@ async def echo(bot, update):
             await pablo.delete()
             return
         os.makedirs(folder)
-        bypasser = lk21.Bypass()
-        xurl = bypasser.bypass_url(url)
-        if file_name is None:
-            if xurl.find('/'):
-                urlname = xurl.rsplit('/', 1)[1]
-            r = requests.get(xurl, allow_redirects=True)
-            file_name = urllib.parse.unquote(urlname)
-        dldir = f'{folder}{file_name}'
+        dldir = lk21_run(url, file_name)
         await pablo.edit_text('Downloading...')
         open(dldir, 'wb').write(r.content)
         await pablo.edit_text('Uploading...')
