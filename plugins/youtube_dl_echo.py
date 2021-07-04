@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
+import lk21, requests, urllib.parse
 import filetype
 import tldextract
 import asyncio
@@ -80,7 +80,14 @@ async def echo(bot, update):
             await pablo.delete()
             return
         os.makedirs(folder)
-        dldir = lk21_run(url, file_name)
+        bypasser = lk21.Bypass()
+        xurl = bypasser.bypass_url(url)
+        if file_name is None:
+            if xurl.find('/'):
+                urlname = xurl.rsplit('/', 1)[1]
+            r = requests.get(xurl, allow_redirects=True)
+            file_name = urllib.parse.unquote(urlname)
+        dldir = f'{folder}{file_name}'
         await pablo.edit_text('Downloading...')
         open(dldir, 'wb').write(r.content)
         await pablo.edit_text('Uploading...')
