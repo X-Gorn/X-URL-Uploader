@@ -72,7 +72,7 @@ async def echo(bot, update):
         pablo = await update.reply_text('LK21 link detected')
         time.sleep(2.5)
         if os.path.isdir(folder):
-            await update.reply_text('Don't spam, wait for your previous task done.')
+            await update.reply_text(r'Don't spam, wait till your previous task done.')
             await pablo.delete()
             return  
         bypasser = lk21.Bypass()
