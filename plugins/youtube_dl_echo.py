@@ -69,19 +69,26 @@ async def echo(bot, update):
     bypass = 'zippyshare'
     ext = tldextract.extract(url)
     if ext.domain == bypass:
+        if "|" in url:
+            url_parts = url.split("|")
+            if len(url_parts) == 2:
+                url = url_parts[0]
+                file_name = url_parts[1]
         pablo = await update.reply_text('LK21 link detected')
         time.sleep(2.5)
         if os.path.isdir(folder):
-            await update.reply_text(r'Don't spam, wait till your previous task done.')
+            await update.reply_text('Don't spam, wait till your previous task done.')
             await pablo.delete()
             return  
         bypasser = lk21.Bypass()
         xurl = bypasser.bypass_url(url)
-        if xurl.find('/'):
-            urlname = xurl.rsplit('/', 1)[1]
-        r = requests.get(xurl, allow_redirects=True)
-        name = urllib.parse.unquote(urlname)
-        dldir = f'{folder}{name}'
+        if file_name is None:
+            if xurl.find('/'):
+                urlname = xurl.rsplit('/', 1)[1]
+            r = requests.get(xurl, allow_redirects=True)
+            file_name = urllib.parse.unquote(urlname)
+        dldir = f'{folder}{file_name}'
+        await pablo.edit_text('Downloading...')
         open(dldir, 'wb').write(r.content)
         if filetype.guess.mime(dldir) == 'image/jpeg':
             await bot.send_photo(
@@ -118,6 +125,7 @@ async def echo(bot, update):
                 caption=name,
                 reply_to_message_id=update.message_id
             )
+        shutil.rmtree(folder)
         return
     if "|" in url:
         url_parts = url.split("|")
