@@ -80,6 +80,7 @@ async def echo(bot, update):
             await pablo.delete()
             return
         os.makedirs(folder)
+        await pablo.edit_text('Downloading...')
         bypasser = lk21.Bypass()
         xurl = bypasser.bypass_url(url)
         if file_name is None:
@@ -88,7 +89,6 @@ async def echo(bot, update):
             r = requests.get(xurl, allow_redirects=True)
             file_name = urllib.parse.unquote(urlname)
         dldir = f'{folder}{file_name}'
-        await pablo.edit_text('Downloading...')
         open(dldir, 'wb').write(r.content)
         await pablo.edit_text('Uploading...')
         file = filetype.guess(dldir)
