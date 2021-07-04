@@ -78,7 +78,7 @@ async def echo(bot, update):
         pablo = await update.reply_text('LK21 link detected')
         time.sleep(2.5)
         if os.path.isdir(folder):
-            await update.reply_text('Don't spam, wait till your previous task done.')
+            await update.reply_text("Don't spam, wait till your previous task done.")
             await pablo.delete()
             return  
         bypasser = lk21.Bypass()
@@ -91,6 +91,7 @@ async def echo(bot, update):
         dldir = f'{folder}{file_name}'
         await pablo.edit_text('Downloading...')
         open(dldir, 'wb').write(r.content)
+        await pablo.edit_text('Uploading...')
         if filetype.guess.mime(dldir) == 'image/jpeg':
             await bot.send_photo(
                 update.chat.id,
