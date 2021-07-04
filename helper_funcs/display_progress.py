@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-import lk21, math, os, time, urllib.parse, shutil, requests
+import math, os, time, shutil
 
 # the secret configuration specific things
 if bool(os.environ.get("WEBHOOK", False)):
@@ -89,14 +89,3 @@ def TimeFormatter(milliseconds: int) -> str:
         ((str(milliseconds) + "ms, ") if milliseconds else "")
     return tmp[:-2]
 
-
-def lk21_run(url, file_name):
-    bypasser = lk21.Bypass()
-    xurl = bypasser.bypass_url(url)
-    if file_name is None:
-        if xurl.find('/'):
-            urlname = xurl.rsplit('/', 1)[1]
-        r = requests.get(xurl, allow_redirects=True)
-        file_name = urllib.parse.unquote(urlname)
-    dldir = f'{folder}{file_name}'
-    return dldir
