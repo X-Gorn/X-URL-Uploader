@@ -86,8 +86,11 @@ async def echo(bot, update):
         dldir = f'{folder}{file_name}'
         open(dldir, 'wb').write(r.content)
         await pablo.edit_text('Uploading...')
-        file = filetype.guess(dldir)
-        xfiletype = file.mime
+        try:
+            file = filetype.guess(dldir)
+            xfiletype = file.mime
+        except AttributeError:
+            xfiletype = file_name
         if xfiletype == 'image/jpeg':
             await bot.send_photo(
                 update.chat.id,
