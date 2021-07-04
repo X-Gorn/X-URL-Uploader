@@ -67,7 +67,7 @@ async def echo(bot, update):
     folder = f'./{update.from_user.id}/zippyshare/'
     bypass = 'zippyshare' or 'files' or 'racaty' or 'hxfile' or 'letsupload' or 'mediafire' or 'sbembed' or 'streamsb' or 'streamtape' or 'uservideo' or 'anonfiles'
     ext = tldextract.extract(url)
-    if ext.domain == bypass:
+    if bypass == ext.domain:
         pablo = await update.reply_text('LK21 link detected')
         time.sleep(2.5)
         if os.path.isdir(folder):
