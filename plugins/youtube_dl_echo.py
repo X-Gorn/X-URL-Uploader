@@ -8,6 +8,10 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+import filetype
+import urllib.parse
+import lk21
+import tldextract
 import asyncio
 import json
 import math
@@ -61,6 +65,60 @@ async def echo(bot, update):
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
+    folder = f'./{update.from_user.id}/zippyshare/'
+    bypass = 'zippyshare'
+    ext = tldextract.extract(url)
+    if ext.domain == bypass:
+        pablo = await update.reply_text('LK21 link detected')
+        time.sleep(2.5)
+        if os.path.isdir(folder):
+            await update.reply_text('Don't spam, wait for your previous task done.')
+            await pablo.delete()
+            return  
+        bypasser = lk21.Bypass()
+        xurl = bypasser.bypass_url(url)
+        if xurl.find('/'):
+            urlname = xurl.rsplit('/', 1)[1]
+        r = requests.get(xurl, allow_redirects=True)
+        name = urllib.parse.unquote(urlname)
+        dldir = f'{folder}{name}'
+        open(dldir, 'wb').write(r.content)
+        if filetype.guess.mime(dldir) == 'image/jpeg':
+            await bot.send_photo(
+                update.chat.id,
+                dldir,
+                name,
+                reply_to_message_id=update.message_id
+            )
+        elif filetype.guess.mime(dldir) == 'video/mp4' or 'video/x-matroska' or 'video/webm':
+            await send_video(
+                update.chat.id,
+                dldir,
+                name,
+                reply_to_message_id=update.message_id
+            )
+        elif filetype.guess.mime(dldir) == 'audio/mpeg':
+            await send_audio(
+                update.chat.id,
+                dldir,
+                name,
+                reply_to_message_id=update.message_id
+            )
+        elif filetype.guess.mime(dldir) == 'image/gif':
+            await send_animation(
+                update.chat.id,
+                dldir,
+                name,
+                reply_to_message_id=update.message_id
+            )
+        else:
+            await send_document(
+                update.chat.id,
+                dldir,
+                caption=name,
+                reply_to_message_id=update.message_id
+            )
+        return
     if "|" in url:
         url_parts = url.split("|")
         if len(url_parts) == 2:
