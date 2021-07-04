@@ -386,7 +386,7 @@ async def echo(bot, update):
 
 
 @pyrogram.Client.on_message(pyrogram.filters.command('deldir'))
-async def echo(bot, update):
+async def deldir(bot, update):
     text = update.text
     if " " in text:
         xtext = update.text.split(None, 1)[1]
