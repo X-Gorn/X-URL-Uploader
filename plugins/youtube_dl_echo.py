@@ -383,3 +383,12 @@ async def echo(bot, update):
             parse_mode="html",
             reply_to_message_id=update.message_id
         )
+
+
+@pyrogram.Client.on_message(pyrogram.filters.command('deldir'))
+async def echo(bot, update):
+    text = update.text
+    if " " in text:
+        xtext = update.text.split(None, 1)[1]
+        shutil.rmtree(f'./zippyshare/{xtext}')
+        await update.reply_text(f'Deleted {xtext} lk21 directory')
