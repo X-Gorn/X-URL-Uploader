@@ -101,28 +101,28 @@ async def echo(bot, update):
                 reply_to_message_id=update.message_id
             )
         elif xfiletype == 'video/mp4' or 'video/x-matroska' or 'video/webm':
-            await send_video(
+            await bot.send_video(
                 update.chat.id,
                 dldir,
                 name,
                 reply_to_message_id=update.message_id
             )
         elif xfiletype == 'audio/mpeg':
-            await send_audio(
+            await bot.send_audio(
                 update.chat.id,
                 dldir,
                 name,
                 reply_to_message_id=update.message_id
             )
         elif xfiletype == 'image/gif':
-            await send_animation(
+            await bot.send_animation(
                 update.chat.id,
                 dldir,
                 name,
                 reply_to_message_id=update.message_id
             )
         else:
-            await send_document(
+            await bot.send_document(
                 update.chat.id,
                 dldir,
                 caption=name,
