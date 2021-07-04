@@ -80,7 +80,8 @@ async def echo(bot, update):
         if os.path.isdir(folder):
             await update.reply_text("Don't spam, wait till your previous task done.")
             await pablo.delete()
-            return  
+            return
+        os.makedirs(folder)
         bypasser = lk21.Bypass()
         xurl = bypasser.bypass_url(url)
         if file_name is None:
