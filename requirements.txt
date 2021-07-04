@@ -9,3 +9,6 @@ requests
 tgcrypto
 youtube-dl
 olefile
+filetype
+tldextract
+lk21
