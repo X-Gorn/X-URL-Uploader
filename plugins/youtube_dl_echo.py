@@ -98,7 +98,7 @@ async def echo(bot, update):
                 file_name,
                 reply_to_message_id=update.message_id
             )
-        elif xfiletype == 'video/mp4' or 'video/x-matroska' or 'video/webm':
+        elif xfiletype in ['video/mp4', 'video/x-matroska', 'video/webm']:
             await bot.send_video(
                 update.chat.id,
                 dldir,
