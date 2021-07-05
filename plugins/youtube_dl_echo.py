@@ -64,7 +64,7 @@ async def echo(bot, update):
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
-    folder = f'./{update.from_user.id}/zippyshare/'
+    folder = f'./lk21/{update.from_user.id}/'
     bypass = ['zippyshare', 'files', 'racaty', 'hxfile', 'letsupload', 'mediafire', 'sbembed', 'streamsb', 'streamtape', 'uservideo', 'anonfiles']
     ext = tldextract.extract(url)
     if ext.domain in bypass:
@@ -397,8 +397,5 @@ async def echo(bot, update):
 
 @pyrogram.Client.on_message(pyrogram.filters.command('deldir'))
 async def deldir(bot, update):
-    text = update.text
-    if " " in text:
-        xtext = update.text.split(None, 1)[1]
-        shutil.rmtree(f'./zippyshare/{xtext}')
-        await update.reply_text(f'Deleted {xtext} lk21 directory')
+    shutil.rmtree(f'./lk21/{update.from_user.id}')
+    await update.reply_text(f'Deleted **{update.from_user.first_name}** lk21 directory')
