@@ -85,9 +85,9 @@ async def echo(bot, update):
         else:
             if xurl.find('/'):
                 urlname = xurl.rsplit('/', 1)[1]
-            r = requests.get(xurl, allow_redirects=True)
             file_name = urllib.parse.unquote(urlname)
         dldir = f'{folder}{file_name}'
+        r = requests.get(xurl, allow_redirects=True)
         open(dldir, 'wb').write(r.content)
         await pablo.edit_text('Uploading...')
         try:
