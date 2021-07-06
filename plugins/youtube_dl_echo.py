@@ -65,7 +65,7 @@ async def echo(bot, update):
     youtube_dl_password = None
     file_name = None
     folder = f'./lk21/{update.from_user.id}/'
-    bypass = ['zippyshare', 'files', 'racaty', 'hxfile', 'letsupload', 'mediafire', 'sbembed', 'streamsb', 'streamtape', 'uservideo', 'anonfiles']
+    bypass = ['zippyshare', 'hxfile', 'mediafire', 'anonfiles']
     ext = tldextract.extract(url)
     if ext.domain in bypass:
         pablo = await update.reply_text('LK21 link detected')
@@ -78,7 +78,11 @@ async def echo(bot, update):
         await pablo.edit_text('Downloading...')
         bypasser = lk21.Bypass()
         xurl = bypasser.bypass_url(url)
-        if file_name is None:
+        if ' | ' in url:
+            url_parts = url.split(' | ')
+            url = url_parts[0]
+            file_name = url_parts[1]
+        else:
             if xurl.find('/'):
                 urlname = xurl.rsplit('/', 1)[1]
             r = requests.get(xurl, allow_redirects=True)
