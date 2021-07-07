@@ -1,6 +1,6 @@
 # X-Noid
 
-import lk21, requests, urllib.parse, filetype, tldextract, os
+import lk21, requests, urllib.parse, filetype, tldextract, os, time
 from pyrogram import Client, filters
 if bool(os.environ.get("WEBHOOK", False)):
     from sample_config import Config
