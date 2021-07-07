@@ -75,6 +75,7 @@ async def _lk21(bot, update):
             if metadata is not None:
                 if metadata.has("duration"):
                     duration = metadata.get('duration').seconds
+        await pablo.edit_text('Uploading...')
         start_time = time.time()
         if xfiletype in ['video/mp4', 'video/x-matroska', 'video/webm']:
             video = await bot.send_video(
@@ -86,7 +87,7 @@ async def _lk21(bot, update):
                 progress=progress_for_pyrogram,
                 progress_args=(
                     Translation.UPLOAD_START,
-                    update,
+                    pablo,
                     start_time
                 )
             )
@@ -102,7 +103,7 @@ async def _lk21(bot, update):
                 progress=progress_for_pyrogram,
                 progress_args=(
                     Translation.UPLOAD_START,
-                    update,
+                    pablo,
                     start_time
                 )
             )
@@ -117,7 +118,7 @@ async def _lk21(bot, update):
                 progress=progress_for_pyrogram,
                 progress_args=(
                     Translation.UPLOAD_START,
-                    update,
+                    pablo,
                     start_time
                 )
             )
