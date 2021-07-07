@@ -24,6 +24,6 @@ heroku/python
 * [@SpEcHlDe](https://t.me/ThankTelegram) for his [AnyDLBot](https://telegram.dog/AnyDLBot)
 * [Dan Tès](https://t.me/haskell) for his [Pyrogram Library](https://github.com/pyrogram/pyrogram)
 * [Yoily](https://t.me/YoilyL) for his [UploaditBot](https://telegram.dog/UploaditBot)
-
+* [@AbirHasan2005](https://t.me/AbirHasan2005) for his [database.py](https://github.com/AbirHasan2005/VideoCompress/blob/main/bot/database/database.py)
 #### LICENSE
 - GPLv3
