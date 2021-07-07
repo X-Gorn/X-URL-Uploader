@@ -142,7 +142,6 @@ async def echo(bot, update):
             await doc_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
         await pablo.delete()
         shutil.rmtree(folder)
-    else:
         return
     if "|" in url:
         url_parts = url.split("|")
