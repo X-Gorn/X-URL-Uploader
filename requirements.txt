@@ -12,3 +12,5 @@ olefile
 filetype
 tldextract
 lk21
+motor
+https://github.com/Tinche/aiofiles/archive/master.zip
