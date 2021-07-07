@@ -11,9 +11,10 @@ from pyrogram.errors import UserNotParticipant
 from helper_funcs.display_progress import progress_for_pyrogram
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
+from translation import Translation
 
 
-@Client.on_message(filters.text)
+@Client.on_message(filters.regex(pattern=".*http.*"))
 async def _lk21(bot, update):
     if update.from_user.id in Config.BANNED_USERS:
         await update.reply_text("You are BANNED")
@@ -64,7 +65,6 @@ async def _lk21(bot, update):
         dldir = f'{folder}{file_name}'
         r = requests.get(xurl, allow_redirects=True)
         open(dldir, 'wb').write(r.content)
-        await pablo.edit_text('Uploading...')
         try:
             file = filetype.guess(dldir)
             xfiletype = file.mime
