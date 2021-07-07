@@ -17,14 +17,19 @@ CURRENT_PROCESSES = {}
 CHAT_FLOOD = {}
 broadcast_ids = {}
 
+
+@Client.on_message(filters.command('total'))
 async def sts(c, m):
-    
+    if m.from_user.id != Config.OWNER_ID:
+        return 
     total_users = await db.total_users_count()
     await m.reply_text(text=f"Total user(s) {total_users}", quote=True)
 
 
+@Client.on_message(filters.command('ban'))
 async def ban(c, m):
-    
+    if m.from_user.id != Config.OWNER_ID:
+        return
     if len(m.command) == 1:
         await m.reply_text(
             f"Use this command to ban any user from the bot.\n\nUsage:\n\n`/ban_user user_id ban_duration ban_reason`\n\nEg: `/ban_user 1234567 28 You misused me.`\n This will ban user with id `1234567` for `28` days for the reason `You misused me`.",
@@ -61,7 +66,10 @@ async def ban(c, m):
         )
 
 
+@Client.on_message(filters.command('unban'))
 async def unban(c, m):
+    if m.from_user.id != Config.OWNER_ID:
+        return
     if len(m.command) == 1:
         await m.reply_text(
             f"Use this command to unban any user.\n\nUsage:\n\n`/unban_user user_id`\n\nEg: `/unban_user 1234567`\n This will unban user with id `1234567`.",
@@ -96,7 +104,10 @@ async def unban(c, m):
         )
 
 
+@Client.on_message(filters.command('banned_users'))
 async def _banned_usrs(c, m):
+    if m.from_user.id != Config.OWNER_ID:
+        return
     all_banned_users = await db.get_all_banned_users()
     banned_usr_count = 0
     text = ''
