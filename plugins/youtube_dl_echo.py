@@ -7,13 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import tldextract
-import asyncio
-import json
-import math
-import os
-import time
-import shutil
+import lk21, requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, json, math
 from PIL import Image
 # the secret configuration specific things
 if bool(os.environ.get("WEBHOOK", False)):
