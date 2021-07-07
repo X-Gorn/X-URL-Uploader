@@ -7,8 +7,6 @@ import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import lk21, requests, urllib.parse
-import filetype
 import tldextract
 import asyncio
 import json
@@ -37,6 +35,12 @@ from pyrogram.errors import UserNotParticipant, UserBannedInChannel
 
 @pyrogram.Client.on_message(pyrogram.filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
+    # for lk21.py
+    url = update.text 
+    bypass = ['zippyshare', 'hxfile', 'mediafire', 'anonfiles']
+    ext = tldextract.extract(url)
+    if ext.domain in bypass:
+        return
     if update.from_user.id in Config.BANNED_USERS:
         await update.reply_text("You are BANNED")
         return
@@ -60,89 +64,9 @@ async def echo(bot, update):
             await update.reply_text("Something Wrong. Contact @xgorn")
             return
     logger.info(update.from_user)
-    url = update.text
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
-    folder = f'./lk21/{update.from_user.id}/'
-    bypass = ['zippyshare', 'hxfile', 'mediafire', 'anonfiles']
-    ext = tldextract.extract(url)
-    if ext.domain in bypass:
-        pablo = await update.reply_text('LK21 link detected')
-        time.sleep(2.5)
-        if os.path.isdir(folder):
-            await update.reply_text("Don't spam, wait till your previous task done.")
-            await pablo.delete()
-            return
-        os.makedirs(folder)
-        await pablo.edit_text('Downloading...')
-        bypasser = lk21.Bypass()
-        xurl = bypasser.bypass_url(url)
-        if ' | ' in url:
-            url_parts = url.split(' | ')
-            url = url_parts[0]
-            file_name = url_parts[1]
-        else:
-            if xurl.find('/'):
-                urlname = xurl.rsplit('/', 1)[1]
-            file_name = urllib.parse.unquote(urlname)
-        dldir = f'{folder}{file_name}'
-        r = requests.get(xurl, allow_redirects=True)
-        open(dldir, 'wb').write(r.content)
-        await pablo.edit_text('Uploading...')
-        try:
-            file = filetype.guess(dldir)
-            xfiletype = file.mime
-        except AttributeError:
-            xfiletype = file_name
-        if xfiletype == 'image/jpeg':
-            photo = await bot.send_photo(
-                update.chat.id,
-                dldir,
-                file_name,
-                reply_to_message_id=update.message_id
-            )
-            photo_f = await photo.forward(Config.LOG_CHANNEL)
-            await document_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
-        elif xfiletype in ['video/mp4', 'video/x-matroska', 'video/webm']:
-            video = await bot.send_video(
-                update.chat.id,
-                dldir,
-                file_name,
-                reply_to_message_id=update.message_id
-            )
-            video_f = await video.forward(Config.LOG_CHANNEL)
-            await video_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
-        elif xfiletype == 'audio/mpeg':
-            audio = await bot.send_audio(
-                update.chat.id,
-                dldir,
-                file_name,
-                reply_to_message_id=update.message_id
-            )
-            audio_f = await audio.forward(Config.LOG_CHANNEL)
-            await audio_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
-        elif xfiletype == 'image/gif':
-            anime = await bot.send_animation(
-                update.chat.id,
-                dldir,
-                file_name,
-                reply_to_message_id=update.message_id
-            )
-            anime_f = await anime.forward(Config.LOG_CHANNEL)
-            await anime_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
-        else:
-            doc = await bot.send_document(
-                update.chat.id,
-                dldir,
-                caption=file_name,
-                reply_to_message_id=update.message_id
-            )
-            doc_f = await doc.forward(Config.LOG_CHANNEL)
-            await doc_f.reply_text("Name: " + str(update.from_user.first_name) + "\nUser ID: " + "<code>" + str(update.from_user.id) + "</code>" + '\nLK21 URL: ' + url)
-        await pablo.delete()
-        shutil.rmtree(folder)
-        return
     if "|" in url:
         url_parts = url.split("|")
         if len(url_parts) == 2:
@@ -399,7 +323,7 @@ async def echo(bot, update):
         )
 
 
-@pyrogram.Client.on_message(pyrogram.filters.command('deldir'))
-async def deldir(bot, update):
+@pyrogram.Client.on_message(pyrogram.filters.command('lkdeldir'))
+async def lkdeldir(bot, update):
     shutil.rmtree(f'./lk21/{update.from_user.id}')
     await update.reply_text(f'Deleted **{update.from_user.first_name}** lk21 directory')
