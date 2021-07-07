@@ -21,6 +21,7 @@ from translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
+from database import Database
 from helper_funcs.display_progress import humanbytes
 from helper_funcs.help_uploadbot import DownLoadFile
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
@@ -29,7 +30,7 @@ from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
 
-
+db = Database(Config.DATABASE_URL, Config.SESSION_NAME)
 
 @pyrogram.Client.on_message(pyrogram.filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
@@ -55,6 +56,8 @@ async def echo(bot, update):
         except Exception:
             await update.reply_text("Something Wrong. Contact @xgorn")
             return
+    if not await db.is_user_exist(update.chat.id):
+        await db.add_user(update.chat.id)
     logger.info(update.from_user)
     youtube_dl_username = None
     youtube_dl_password = None
