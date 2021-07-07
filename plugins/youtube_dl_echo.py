@@ -35,12 +35,6 @@ from pyrogram.errors import UserNotParticipant, UserBannedInChannel
 
 @pyrogram.Client.on_message(pyrogram.filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
-    # for lk21.py
-    url = update.text 
-    bypass = ['zippyshare', 'hxfile', 'mediafire', 'anonfiles']
-    ext = tldextract.extract(url)
-    if ext.domain in bypass:
-        return
     if update.from_user.id in Config.BANNED_USERS:
         await update.reply_text("You are BANNED")
         return
@@ -67,6 +61,7 @@ async def echo(bot, update):
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
+    url = update.text
     if "|" in url:
         url_parts = url.split("|")
         if len(url_parts) == 2:
