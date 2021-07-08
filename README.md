@@ -9,6 +9,10 @@ Telegram RoBot to Upload Links.
 
 👉 Upload HTTP/HTTPS as File/Video to Telegram.
 
+👉 Upload ZippyShare, HxFile, MediaFire and AnonFiles URLs
+
+👉 Broadcast message, ban, unban, check total users
+
 **Heroku Buildpacks**
 ```
 https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest
