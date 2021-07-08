@@ -34,8 +34,16 @@
       "description": "Get this value from https://my.telegram.org",
       "value": ""
     },
-    "AUTH_USERS": {
-      "description": "allow only pre-defined users to use this bot",
+    "OWNER_ID": {
+      "description": "Your Telegram ID",
+      "value": ""
+    },
+    "DATABASE_URL": {
+      "description": "Your MongoDB URI",
+      "value": ""
+    },
+    "SESSION_NAME": {
+      "description": "Your Session Name: Example: xurluploader",
       "value": ""
     },
     "BANNED_USERS": {
