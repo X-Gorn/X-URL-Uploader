@@ -15,6 +15,10 @@ Telegram RoBot to Upload Links.
 
 👉 [X-URL-Uploader-dev](https://github.com/X-Gorn/X-URL-Uploader/tree/dev)
 
+## Telegram Support:
+
+[![Channel](https://img.shields.io/badge/TG-Channel-30302f?style=flat&logo=telegram)](https://t.me/xTeamBots)
+[![Group](https://img.shields.io/badge/TG-Group-30302f?style=flat&logo=telegram)](https://t.me/xTeamChats)
 
 ## Credits, and Thanks to:
 
