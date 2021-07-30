@@ -38,7 +38,7 @@ async def echo(bot, update):
         youtube_dl_password = None
         file_name = None
         folder = f'./lk21/{update.from_user.id}/'
-        bypass = ['zippyshare', 'hxfile', 'mediafire', 'anonfiles']
+        bypass = ['zippyshare', 'hxfile', 'mediafire', 'anonfiles', 'antfiles']
         ext = tldextract.extract(url)
         if ext.domain in bypass:
             pablo = await update.reply_text('LK21 link detected')
