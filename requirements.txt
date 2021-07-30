@@ -10,3 +10,4 @@ youtube-dl
 olefile
 lk21
 filetype
+tldextract
