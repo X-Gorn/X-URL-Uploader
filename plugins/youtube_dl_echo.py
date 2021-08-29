@@ -58,6 +58,10 @@ async def echo(bot, update):
             return
     if not await db.is_user_exist(update.chat.id):
         await db.add_user(update.chat.id)
+    ban_status = await db.get_ban_status(update.chat.id)
+    if ban_status['is_banned']:
+      await update.reply_text(f"You are Banned\n\nReason: {ban_status['ban_reason']}")
+      return
     logger.info(update.from_user)
     youtube_dl_username = None
     youtube_dl_password = None
