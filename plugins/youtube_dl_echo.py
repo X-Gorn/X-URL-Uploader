@@ -89,6 +89,8 @@ async def echo(bot, update):
             if xurl.find('/'):
                 urlname = xurl.rsplit('/', 1)[1]
             file_name = urllib.parse.unquote(urlname)
+            if '+' in file_name:
+                file_name = file_name.replace('+', ' ') 
         dldir = f'{folder}{file_name}'
         r = requests.get(xurl, allow_redirects=True)
         open(dldir, 'wb').write(r.content)
