@@ -48,11 +48,11 @@ async def start(bot, update):
             [
                 [
                     InlineKeyboardButton(
-                        "Source", url="https://github.com/X-Gorn/X-URL-Uploader"
+                        "Movie Group📽️", url="https://t.me/new_cinema_mall"
                     ),
-                    InlineKeyboardButton("Project Channel", url="https://t.me/xTeamBots"),
+                    InlineKeyboardButton("PSG Group⚽️", url="https://t.me/psg_official_kerala"),
                 ],
-                [InlineKeyboardButton("Author", url="https://t.me/xgorn")],
+                [InlineKeyboardButton("Owner👨‍🦱", url="https://t.me/Dhalapathy_vijay")],
             ]
         ),
         reply_to_message_id=update.message_id
