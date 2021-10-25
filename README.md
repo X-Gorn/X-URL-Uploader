@@ -20,7 +20,7 @@ https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest
 ```
 heroku/python
 ```
-
+https://heroku.com/deploy?template=https://github.com/Forkers-editing-hub/X-URL-Uploader/tree/dev
 https://heroku.com/deploy?template=https://github.com/Forkers-editing-hub/X-URL-Uploader/tree/database
 ## Credits, and Thanks to
 
