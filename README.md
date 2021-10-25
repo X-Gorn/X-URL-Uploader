@@ -21,7 +21,7 @@ https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest
 heroku/python
 ```
 
-
+https://heroku.com/deploy?template=https://github.com/Forkers-editing-hub/X-URL-Uploader/tree/database
 ## Credits, and Thanks to
 
 * [@TGExplore](https://t.me/ViruZs) for his [TG-URL-Uploader](https://github.com/TGExplore/TG-URL-Uploader)
