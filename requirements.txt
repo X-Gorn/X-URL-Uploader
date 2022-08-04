@@ -6,7 +6,7 @@ Pillow
 pyrogram==1.3.6
 requests
 tgcrypto
-yt-dlp
+youtube-dl
 olefile
 lk21
 filetype
