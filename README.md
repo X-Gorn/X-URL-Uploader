@@ -17,6 +17,10 @@ Telegram RoBot to Upload Links.
 
 👉 [X-URL-Uploader-dev](https://github.com/X-Gorn/X-URL-Uploader/tree/dev)
 
+**Deploying on VPS**:
+
+[![YouTube Video Views](https://img.shields.io/youtube/views/SKrEaAavhMs?logoColor=black)](https://youtu.be/SKrEaAavhMs)
+
 ## Telegram Support:
 
 [![Channel](https://img.shields.io/badge/TG-Channel-30302f?style=flat&logo=telegram)](https://t.me/xTeamBots)
