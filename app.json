@@ -16,7 +16,7 @@
   ],
   "success_url": "https://t.me/xurluploaderbot",
   "website": "https://github.com/X-Gorn",
-  "repository": "https://github.com/X-Gorn/X-URL-Uploader",
+  "repository": "https://github.com/amitnara125/X-URL-Uploader",
   "env": {
     "WEBHOOK": {
       "description": "Setting this to ANYTHING will enable webhooks when in env mode",
