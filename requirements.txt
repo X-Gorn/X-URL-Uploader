@@ -1,13 +1,8 @@
+git+https://github.com/X-Gorn/pyrogram.git@dev
+TgCrypto
 aiohttp
+yt-dlp
 beautifulsoup4
 hachoir
 numpy
 Pillow
-pyrogram==1.3.6
-requests
-tgcrypto
-yt-dlp
-olefile
-lk21
-filetype
-tldextract
