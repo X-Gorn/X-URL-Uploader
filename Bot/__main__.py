@@ -11,7 +11,7 @@ async def main():
     client.session = session
     if client.config.AUTH_USERS:
         client.config.AUTH_USERS.append(client.config.OWNER_ID)
-    client.logger.info(f'{client.me.first_name} Started!')
+    client.logger.info(f'{client.bot.me.first_name} Started!')
     await idle()
 
 
