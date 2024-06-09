@@ -35,6 +35,11 @@
       "value": "",
       "required": false
     },
+    "OWNER_ID": {
+      "description": "Telegram ID of the owner.",
+      "value": "",
+      "required": false
+    },
     "DUMP_ID": {
       "description": "Dump Channel/Group.",
       "value": "",

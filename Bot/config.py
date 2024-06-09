@@ -24,6 +24,8 @@ class Config(object):
     AUTH_USERS = [int(id) for id in os.environ.get(
         "AUTH_USERS", "").split()] if os.environ.get("AUTH_USERS", None) else None
 
+    OWNER_ID = int(os.environ.get('OWNER_ID'))
+
     # MongoDB
     DATABASE_URL = os.environ.get("DATABASE_URL")
 

@@ -9,6 +9,8 @@ async def main():
     await client.bot.set_bot_commands(client.config.BOT_COMMANDS)
     session = ClientSession()
     client.session = session
+    if client.config.AUTH_USERS:
+        client.config.AUTH_USERS.append(client.config.OWNER_ID)
     await idle()
 
 
