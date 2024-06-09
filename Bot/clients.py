@@ -1,5 +1,8 @@
+import motor.motor_asyncio
+import asyncio
 from pyrogram import Client, enums
 from aiohttp import ClientSession
+from typing import Union
 from .config import Config
 from .translation import Translation
 
@@ -7,9 +10,11 @@ from .translation import Translation
 class BotClient(Client):
 
     def __init__(self):
+        self.sleep = asyncio.sleep
         self.session: ClientSession = None
         self.config = Config
         self.translation = Translation
+        self.database: Union[motor.motor_asyncio.AsyncIOMotorClient, None] = motor.motor_asyncio.AsyncIOMotorClient(self.config.DATABASE_URL) if self.config.DATABASE_URL else None
         self.custom_thumbnail = {}
         self.custom_caption = {}
         self.bot: Client = Client(
