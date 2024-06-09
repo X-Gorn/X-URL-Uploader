@@ -3,6 +3,24 @@ import asyncio
 import re
 from typing import Tuple
 
+ffmpeg_supported_video_mimetypes = [
+    'video/mp4',
+    'video/x-matroska',
+    'video/webm',
+    'video/mpeg',
+    'video/ogg',
+    'video/x-nut',
+    'video/MP2T',
+    'video/x-mjpeg',
+    'video/x-m4v',
+    'video/x-h261',
+    'video/x-h263',
+    'video/x-flv',
+    'video/x-msvideo',
+    'video/x-ms-asf',
+    'video/3gpp2',
+    'video/3gpp'
+]
 
 # Detect URLS using Regex. https://stackoverflow.com/a/3809435/15561455
 URL_REGEX = re.compile(

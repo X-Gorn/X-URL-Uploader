@@ -7,6 +7,7 @@ import asyncio
 import os
 import time
 import re
+import random
 from datetime import datetime
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -15,6 +16,7 @@ from pyrogram import Client, enums
 from pyrogram.types import CallbackQuery
 from .display_progress import progress_for_pyrogram
 from .download import download_coroutine
+from .helper import run_cmd, ffmpeg_supported_video_mimetypes
 from .. import client
 
 
@@ -122,6 +124,10 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                 if metadata is not None:
                     if metadata.has("duration"):
                         duration = metadata.get('duration').seconds
+            # auto generate thumbnail if not available
+            if not os.path.exists(thumb_image_path):
+                if client.guess_mime_type(download_directory) in ffmpeg_supported_video_mimetypes:
+                    await run_cmd('ffmpeg -ss {} -i "{}" -vframes 1 "{}"'.format(random.randint(0, duration), download_directory, thumb_image_path))
             # get the correct width, height, and duration for videos greater than 10MB
             if os.path.exists(thumb_image_path):
                 width = 0

@@ -4,9 +4,9 @@
 
 
 import time
-import shutil
 import os
 import json
+import random
 import re
 import asyncio
 from PIL import Image
@@ -18,6 +18,7 @@ from pyrogram import Client, enums
 from pyrogram.types import CallbackQuery
 from .display_progress import progress_for_pyrogram, humanbytes
 from .help_Nekmo_ffmpeg import generate_screen_shots
+from .helper import run_cmd, ffmpeg_supported_video_mimetypes
 from .. import client
 
 
@@ -203,6 +204,10 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                 if metadata is not None:
                     if metadata.has("duration"):
                         duration = metadata.get('duration').seconds
+            # auto generate thumbnail if not available
+            if not os.path.exists(thumb_image_path):
+                if client.guess_mime_type(download_directory) in ffmpeg_supported_video_mimetypes:
+                    await run_cmd('ffmpeg -ss {} -i "{}" -vframes 1 "{}"'.format(random.randint(0, duration), download_directory, thumb_image_path))
             # get the correct width, height, and duration for videos greater than 10MB
             if os.path.exists(thumb_image_path):
                 width = 0
@@ -228,7 +233,6 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                     img.resize((90, height))
                 img.save(thumb_image_path, "JPEG")
                 # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
-
             else:
                 thumb_image_path = None
             start_time = time.time()
@@ -307,7 +311,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
             end_two = datetime.now()
             time_taken_for_upload = (end_two - end_one).seconds
             media_album_p: list[InputMediaPhoto] = []
-            if images is not None:
+            if images:
                 i = 0
                 caption = "@xurluploaderbot"
                 for image in images:
