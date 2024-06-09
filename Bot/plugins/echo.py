@@ -250,8 +250,8 @@ async def echo_http(bot: Client, update: Message):
             session=client.session,
             url=thumbnail_image,
             file_name=thumb_image_path,
-            chat_id=update.chat.id,
-            message_id=update.chat.id,
+            chat_id=update.from_user.id,
+            message_id=update.id,
             start=time.time(),
             headers=None
         )
