@@ -6,3 +6,5 @@ beautifulsoup4
 hachoir
 numpy
 Pillow
+motor
+dnspython
