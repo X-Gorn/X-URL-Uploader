@@ -244,23 +244,24 @@ async def echo_http(bot: Client, update: Message):
             if response_json["thumbnail"] is not None:
                 thumbnail = response_json["thumbnail"]
                 thumbnail_image = response_json["thumbnail"]
-        thumb_image_path = client.config.DOWNLOAD_LOCATION + \
-            "/" + str(update.from_user.id) + ".webp"
-        await download_coroutine(
-            bot=None,
-            session=client.session,
-            url=thumbnail_image,
-            file_name=thumb_image_path,
-            chat_id=None,
-            message_id=None,
-            start=time.time(),
-            headers=None
-        )
-        if os.path.exists(thumb_image_path):
-            im = Image.open(thumb_image_path).convert("RGB")
-            im.save(thumb_image_path.replace(".webp", ".jpg"), "jpeg")
-        else:
-            thumb_image_path = None
+        if not client.custom_thumbnail:
+            thumb_image_path = client.config.DOWNLOAD_LOCATION + \
+                "/" + str(update.from_user.id) + ".webp"
+            await download_coroutine(
+                bot=None,
+                session=client.session,
+                url=thumbnail_image,
+                file_name=thumb_image_path,
+                chat_id=None,
+                message_id=None,
+                start=time.time(),
+                headers=None
+            )
+            if os.path.exists(thumb_image_path):
+                im = Image.open(thumb_image_path).convert("RGB")
+                im.save(thumb_image_path.replace(".webp", ".jpg"), "jpeg")
+            else:
+                thumb_image_path = None
         await bot.send_message(
             chat_id=update.chat.id,
             text=client.translation.FORMAT_SELECTION.format(
