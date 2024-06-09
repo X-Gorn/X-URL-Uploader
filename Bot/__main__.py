@@ -1,7 +1,13 @@
 import os
+import logging
 from . import client
 from aiohttp import ClientSession
 from pyrogram import idle
+
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 
 async def main():
