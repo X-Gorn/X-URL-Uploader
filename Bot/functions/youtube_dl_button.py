@@ -167,9 +167,8 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
         file_size = client.config.TG_MAX_FILE_SIZE + 1
         try:
             file_size = os.stat(download_directory).st_size
-        except FileNotFoundError as exc:
-            download_directory = os.path.splitext(
-                download_directory)[0] + "." + "mkv"
+        except FileNotFoundError:
+            download_directory = download_directory + "." + "mkv"
             # https://stackoverflow.com/a/678242/4723940
             file_size = os.stat(download_directory).st_size
         if file_size > client.config.TG_MAX_FILE_SIZE:
