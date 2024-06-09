@@ -12,7 +12,7 @@ async def no_args_filter(_, __, m: Message):
     return True if len(m.command) == 1 else False
 
 
-@Client.on_message(filters.private & filters.command('caption') & filters.chat(client.config.AUTH_USERS))
+@Client.on_message(filters.private & filters.command('caption') & filters.user(client.config.AUTH_USERS))
 async def custom_caption(bot: Client, update: Message):
     if client.database:
         user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
@@ -34,7 +34,7 @@ async def custom_caption(bot: Client, update: Message):
     client.custom_caption[update.from_user.id] = caption
 
 
-@Client.on_message(filters.private & filters.command('thumbnail') & ~filters.reply & (filters.regex(pattern=URL_REGEX) | filters.create(no_args_filter)) & filters.chat(client.config.AUTH_USERS))
+@Client.on_message(filters.private & filters.command('thumbnail') & ~filters.reply & (filters.regex(pattern=URL_REGEX) | filters.create(no_args_filter)) & filters.user(client.config.AUTH_USERS))
 async def custom_thumbnail(bot: Client, update: Message):
     if client.database:
         user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
@@ -59,7 +59,7 @@ async def custom_thumbnail(bot: Client, update: Message):
     client.custom_thumbnail[update.from_user.id] = thumbnail
 
 
-@Client.on_message(filters.private & filters.command('thumbnail') & filters.reply & filters.create(reply_to_photo_filter) & filters.chat(client.config.AUTH_USERS))
+@Client.on_message(filters.private & filters.command('thumbnail') & filters.reply & filters.create(reply_to_photo_filter) & filters.user(client.config.AUTH_USERS))
 async def custom_thumbnail_reply(bot: Client, update: Message):
     client.custom_thumbnail[update.from_user.id] = await update.reply_to_message.download(file_name=f'{client.config.DOWNLOAD_LOCATION}/{update.from_user.id}.jpg')
     await update.reply(text='Custom thumbnail updated.')

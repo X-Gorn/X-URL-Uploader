@@ -8,7 +8,7 @@ from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
 from .. import client
 
 
-@Client.on_message(filters.private & filters.command("help") & filters.chat(client.config.AUTH_USERS))
+@Client.on_message(filters.private & filters.command("help") & filters.user(client.config.AUTH_USERS))
 async def help(bot: Client, update: Message):
     await bot.send_message(
         chat_id=update.chat.id,
@@ -18,7 +18,7 @@ async def help(bot: Client, update: Message):
     )
 
 
-@Client.on_message(filters.private & filters.command("start") & filters.chat(client.config.AUTH_USERS))
+@Client.on_message(filters.private & filters.command("start") & filters.user(client.config.AUTH_USERS))
 async def start(bot: Client, update: Message):
     await bot.send_message(
         chat_id=update.chat.id,
