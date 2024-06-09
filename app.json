@@ -45,6 +45,11 @@
       "value": "",
       "required": false
     },
+    "DATABASE_URL": {
+      "description": "MongoDB database URL.",
+      "value": "",
+      "required": false
+    },
     "DEF_THUMB_NAIL_VID_S": {
       "description": "Default thumbnail to be used in the videos. Incase yt-dlp is unable to find a thumbnail.",
       "value": "",
