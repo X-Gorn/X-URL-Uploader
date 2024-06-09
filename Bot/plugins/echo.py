@@ -246,12 +246,12 @@ async def echo_http(bot: Client, update: Message):
         thumb_image_path = client.config.DOWNLOAD_LOCATION + \
             "/" + str(update.from_user.id) + ".webp"
         await download_coroutine(
-            bot=bot,
+            bot=None,
             session=client.session,
             url=thumbnail_image,
             file_name=thumb_image_path,
-            chat_id=update.from_user.id,
-            message_id=update.id,
+            chat_id=None,
+            message_id=None,
             start=time.time(),
             headers=None
         )

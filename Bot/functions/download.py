@@ -8,7 +8,7 @@ from .display_progress import humanbytes, TimeFormatter
 from .. import client
 
 
-async def download_coroutine(bot: Client, session: ClientSession, url: str, file_name: str, chat_id: Union[str, int], message_id: int, start: float, headers: dict):
+async def download_coroutine(bot: Union[Client, None], session: ClientSession, url: str, file_name: str, chat_id: Union[str, int, None], message_id: Union[int, None], start: float, headers: dict):
     downloaded = 0
     display_message = ""
     async with session.get(url, timeout=client.config.PROCESS_MAX_TIMEOUT, headers=headers) as response:
@@ -17,12 +17,13 @@ async def download_coroutine(bot: Client, session: ClientSession, url: str, file
         if "text" in content_type and total_length < 500 and total_length:
             return await response.release()
         if total_length:
-            await bot.edit_message_text(
-                chat_id,
-                message_id,
-                text="Initiating Download\nURL: {}\nFile Size: {}".format(
-                    url, humanbytes(total_length))
-            )
+            if bot:
+                await bot.edit_message_text(
+                    chat_id,
+                    message_id,
+                    text="Initiating Download\nURL: {}\nFile Size: {}".format(
+                        url, humanbytes(total_length))
+                )
         with open(file_name, "wb") as f_handle:
             while True:
                 chunk = await response.content.read(client.config.CHUNK_SIZE)
@@ -41,35 +42,38 @@ async def download_coroutine(bot: Client, session: ClientSession, url: str, file
                             (total_length - downloaded) / speed) * 1000
                         estimated_total_time = elapsed_time + time_to_completion
                         try:
-                            current_message = "Download Status\nURL: {}\nFile Size: {}\nDownloaded: {}\nETA: {}".format(
-                                url, humanbytes(total_length), humanbytes(downloaded), TimeFormatter(estimated_total_time))
+                            current_message = "Download Status {}%\nURL: {}\nFile Size: {}\nDownloaded: {}\nETA: {}".format(percentage,
+                                                                                                                            url, humanbytes(total_length), humanbytes(downloaded), TimeFormatter(estimated_total_time))
                             if current_message != display_message:
-                                await bot.edit_message_text(
-                                    chat_id,
-                                    message_id,
-                                    text=current_message
-                                )
-                                display_message = current_message
+                                if bot:
+                                    await bot.edit_message_text(
+                                        chat_id,
+                                        message_id,
+                                        text=current_message
+                                    )
+                                    display_message = current_message
                         except FloodWait:
                             pass
                         except Exception as e:
-                            error = str(e)
-                            await bot.edit_message_text(
-                                chat_id,
-                                message_id,
-                                text=f"Error: {error}"
-                            )
-        try:
-            await bot.edit_message_text(
-                chat_id,
-                message_id,
-                text=f"Download Completed."
-            )
-        except FloodWait as e:
-            await asyncio.sleep(e.value)
-            await bot.edit_message_text(
-                chat_id,
-                message_id,
-                text=f"Download Completed."
-            )
+                            if bot:
+                                error = str(e)
+                                await bot.edit_message_text(
+                                    chat_id,
+                                    message_id,
+                                    text=f"Error: {error}"
+                                )
+        if bot:
+            try:
+                await bot.edit_message_text(
+                    chat_id,
+                    message_id,
+                    text=f"Download Completed."
+                )
+            except FloodWait as e:
+                await asyncio.sleep(e.value)
+                await bot.edit_message_text(
+                    chat_id,
+                    message_id,
+                    text=f"Download Completed."
+                )
         return await response.release()
