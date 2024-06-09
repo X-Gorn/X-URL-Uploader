@@ -14,6 +14,13 @@ async def no_args_filter(_, __, m: Message):
 
 @Client.on_message(filters.private & filters.command('caption') & filters.chat(client.config.AUTH_USERS))
 async def custom_caption(bot: Client, update: Message):
+    if client.database:
+        user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
+        if not user:
+            user = await client.database.xurluploader.users.insert_one({'id': update.from_user.id, 'banned': False})
+        else:
+            if user.get('banned'):
+                return await update.reply('You are banned.')
     try:
         caption = update.text.html.split(' ', 1)[1]
         await update.reply(text='Custom caption updated.')
@@ -29,6 +36,13 @@ async def custom_caption(bot: Client, update: Message):
 
 @Client.on_message(filters.private & filters.command('thumbnail') & ~filters.reply & (filters.regex(pattern=URL_REGEX) | filters.create(no_args_filter)) & filters.chat(client.config.AUTH_USERS))
 async def custom_thumbnail(bot: Client, update: Message):
+    if client.database:
+        user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
+        if not user:
+            user = await client.database.xurluploader.users.insert_one({'id': update.from_user.id, 'banned': False})
+        else:
+            if user.get('banned'):
+                return await update.reply('You are banned.')
     try:
         thumbnail = f'{client.config.DOWNLOAD_LOCATION}/{update.from_user.id}.jpg'
         command = 'wget -O "{}" "{}"'.format(

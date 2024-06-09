@@ -21,8 +21,15 @@ URL_REGEX = re.compile(
     pattern=r'(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*))(.*)?')
 
 
-@Client.on_message(filters.private & filters.regex(pattern=URL_REGEX) & filters.chat(client.config.AUTH_USERS))
+@Client.on_message(filters.private & filters.regex(pattern=URL_REGEX) & filters.chat(chats=client.config.AUTH_USERS))
 async def echo_http(bot: Client, update: Message):
+    if client.database:
+        user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
+        if not user:
+            user = await client.database.xurluploader.users.insert_one({'id': update.from_user.id, 'banned': False})
+        else:
+            if user.get('banned'):
+                return await update.reply('You are banned.')
     regex = URL_REGEX.search(update.text)
     url = regex.group(1)
     text = regex.group(2) if regex.group(2) else ""
