@@ -2,56 +2,45 @@
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 
-# the logging things
-import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
-import asyncio
-import json
-import math
-import os
-import shutil
 import time
-from datetime import datetime
-
-# the secret configuration specific things
-if bool(os.environ.get("WEBHOOK", False)):
-    from sample_config import Config
-else:
-    from config import Config
-
-# the Strings used for this "thing"
-from translation import Translation
-
-import pyrogram
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
-
-from pyrogram.types import InputMediaPhoto
-from helper_funcs.display_progress import progress_for_pyrogram, humanbytes
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
-# https://stackoverflow.com/a/37631799/4723940
+import shutil
+import os
+import json
+import re
+import asyncio
 from PIL import Image
-from helper_funcs.help_Nekmo_ffmpeg import generate_screen_shots
+from hachoir.parser import createParser
+from hachoir.metadata import extractMetadata
+from pyrogram.types import InputMediaPhoto
+from datetime import datetime
+from pyrogram import Client, enums
+from pyrogram.types import CallbackQuery
+from .display_progress import progress_for_pyrogram, humanbytes
+from .help_Nekmo_ffmpeg import generate_screen_shots
+from .. import client
 
 
-async def youtube_dl_call_back(bot, update):
-    cb_data = update.data
-    # youtube_dl extractors
-    tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("|")
-    thumb_image_path = Config.DOWNLOAD_LOCATION + \
+# Detect URLS using Regex. https://stackoverflow.com/a/3809435/15561455
+URL_REGEX = re.compile(
+    pattern=r'(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*))(.*)?')
+
+
+async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
+    tg_send_type, youtube_dl_format, youtube_dl_ext = update.data.split("|")
+    thumb_image_path = client.config.DOWNLOAD_LOCATION + \
         "/" + str(update.from_user.id) + ".jpg"
-    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + \
+    if client.custom_thumbnail.get(update.from_user.id):
+        thumb_image_path = client.custom_thumbnail.get(update.from_user.id)
+    save_ytdl_json_path = client.config.DOWNLOAD_LOCATION + \
         "/" + str(update.from_user.id) + ".json"
     try:
         with open(save_ytdl_json_path, "r", encoding="utf8") as f:
             response_json = json.load(f)
-    except (FileNotFoundError) as e:
+    except FileNotFoundError:
         await bot.delete_messages(
             chat_id=update.message.chat.id,
-            message_ids=update.message.message_id,
+            message_ids=update.message.id,
             revoke=True
         )
         return False
@@ -60,21 +49,24 @@ async def youtube_dl_call_back(bot, update):
         "_" + youtube_dl_format + "." + youtube_dl_ext
     youtube_dl_username = None
     youtube_dl_password = None
-    if "|" in youtube_dl_url:
-        url_parts = youtube_dl_url.split("|")
+    regex = URL_REGEX.search(update.message.reply_to_message.text)
+    youtube_dl_url = regex.group(1)
+    text = regex.group(2) if regex.group(2) else ""
+    if "|" in text:
+        url_parts = text.split("|")
         if len(url_parts) == 2:
-            youtube_dl_url = url_parts[0]
+            _ = url_parts[0]
             custom_file_name = url_parts[1]
         elif len(url_parts) == 4:
-            youtube_dl_url = url_parts[0]
+            _ = url_parts[0]
             custom_file_name = url_parts[1]
             youtube_dl_username = url_parts[2]
             youtube_dl_password = url_parts[3]
         else:
             for entity in update.message.reply_to_message.entities:
-                if entity.type == "text_link":
+                if entity.type == enums.MessageEntityType.TEXT_LINK:
                     youtube_dl_url = entity.url
-                elif entity.type == "url":
+                elif entity.type == enums.MessageEntityType.URL:
                     o = entity.offset
                     l = entity.length
                     youtube_dl_url = youtube_dl_url[o:o + l]
@@ -87,28 +79,27 @@ async def youtube_dl_call_back(bot, update):
             youtube_dl_username = youtube_dl_username.strip()
         if youtube_dl_password is not None:
             youtube_dl_password = youtube_dl_password.strip()
-        logger.info(youtube_dl_url)
-        logger.info(custom_file_name)
     else:
         for entity in update.message.reply_to_message.entities:
-            if entity.type == "text_link":
+            if entity.type == enums.MessageEntityType.TEXT_LINK:
                 youtube_dl_url = entity.url
-            elif entity.type == "url":
+            elif entity.type == enums.MessageEntityType.URL:
                 o = entity.offset
                 l = entity.length
                 youtube_dl_url = youtube_dl_url[o:o + l]
     await bot.edit_message_text(
-        text=Translation.DOWNLOAD_START,
+        text=client.translation.DOWNLOAD_START,
         chat_id=update.message.chat.id,
-        message_id=update.message.message_id
+        message_id=update.message.id
     )
-    user = await bot.get_me()
-    mention = user["mention"]
-    description = Translation.CUSTOM_CAPTION_UL_FILE.format(mention)
+    description = client.translation.CUSTOM_CAPTION_UL_FILE.format(
+        bot.me.mention)
     if "fulltitle" in response_json:
         description = response_json["fulltitle"][0:1021]
         # escape Markdown and special characters
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
+    description = client.custom_caption.get(update.from_user.id) if client.custom_caption.get(update.from_user.id) else description
+    tmp_directory_for_each_user = client.config.DOWNLOAD_LOCATION + \
+        "/" + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + custom_file_name
@@ -117,7 +108,7 @@ async def youtube_dl_call_back(bot, update):
         command_to_exec = [
             "yt-dlp",
             "-c",
-            "--max-filesize", str(Config.TG_MAX_FILE_SIZE),
+            "--max-filesize", str(client.config.TG_MAX_FILE_SIZE),
             "--prefer-ffmpeg",
             "--extract-audio",
             "--audio-format", youtube_dl_ext,
@@ -133,15 +124,15 @@ async def youtube_dl_call_back(bot, update):
         command_to_exec = [
             "yt-dlp",
             "-c",
-            "--max-filesize", str(Config.TG_MAX_FILE_SIZE),
+            "--max-filesize", str(client.config.TG_MAX_FILE_SIZE),
             "--embed-subs",
             "-f", minus_f_format,
             "--hls-prefer-ffmpeg", youtube_dl_url,
             "-o", download_directory
         ]
-    if Config.HTTP_PROXY != "":
+    if client.config.HTTP_PROXY != "":
         command_to_exec.append("--proxy")
-        command_to_exec.append(Config.HTTP_PROXY)
+        command_to_exec.append(client.config.HTTP_PROXY)
     if youtube_dl_username is not None:
         command_to_exec.append("--username")
         command_to_exec.append(youtube_dl_username)
@@ -149,27 +140,21 @@ async def youtube_dl_call_back(bot, update):
         command_to_exec.append("--password")
         command_to_exec.append(youtube_dl_password)
     command_to_exec.append("--no-warnings")
-    # command_to_exec.append("--quiet")
-    logger.info(command_to_exec)
     start = datetime.now()
     process = await asyncio.create_subprocess_exec(
         *command_to_exec,
-        # stdout must a pipe to be accessible as process.stdout
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
-    # Wait for the subprocess to finish
     stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
-    logger.info(e_response)
-    logger.info(t_response)
     ad_string_to_replace = "please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output."
     if e_response and ad_string_to_replace in e_response:
         error_message = e_response.replace(ad_string_to_replace, "")
         await bot.edit_message_text(
             chat_id=update.message.chat.id,
-            message_id=update.message.message_id,
+            message_id=update.message.id,
             text=error_message
         )
         return False
@@ -177,19 +162,21 @@ async def youtube_dl_call_back(bot, update):
         # logger.info(t_response)
         os.remove(save_ytdl_json_path)
         end_one = datetime.now()
-        time_taken_for_download = (end_one -start).seconds
-        file_size = Config.TG_MAX_FILE_SIZE + 1
+        time_taken_for_download = (end_one - start).seconds
+        file_size = client.config.TG_MAX_FILE_SIZE + 1
         try:
             file_size = os.stat(download_directory).st_size
         except FileNotFoundError as exc:
-            download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
+            download_directory = os.path.splitext(
+                download_directory)[0] + "." + "mkv"
             # https://stackoverflow.com/a/678242/4723940
             file_size = os.stat(download_directory).st_size
-        if file_size > Config.TG_MAX_FILE_SIZE:
+        if file_size > client.config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.message.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(time_taken_for_download, humanbytes(file_size)),
-                message_id=update.message.message_id
+                text=client.translation.RCHD_TG_API_LIMIT.format(
+                    time_taken_for_download, humanbytes(file_size)),
+                message_id=update.message.id
             )
         else:
             is_w_f = False
@@ -197,15 +184,14 @@ async def youtube_dl_call_back(bot, update):
                 download_directory,
                 tmp_directory_for_each_user,
                 is_w_f,
-                Config.DEF_WATER_MARK_FILE,
+                client.config.DEF_WATER_MARK_FILE,
                 300,
                 9
             )
-            logger.info(images)
             await bot.edit_message_text(
-                text=Translation.UPLOAD_START,
+                text=client.translation.UPLOAD_START,
                 chat_id=update.message.chat.id,
-                message_id=update.message.message_id
+                message_id=update.message.id
             )
             # get the correct width, height, and duration for videos greater than 10MB
             # ref: message from @BotSupport
@@ -242,7 +228,7 @@ async def youtube_dl_call_back(bot, update):
                     img.resize((90, height))
                 img.save(thumb_image_path, "JPEG")
                 # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
-                
+
             else:
                 thumb_image_path = None
             start_time = time.time()
@@ -252,16 +238,17 @@ async def youtube_dl_call_back(bot, update):
                     chat_id=update.message.chat.id,
                     audio=download_directory,
                     caption=description,
-                    parse_mode="HTML",
+                    parse_mode=enums.ParseMode.HTML,
                     duration=duration,
-                    # performer=response_json["uploader"],
-                    # title=response_json["title"],
-                    # reply_markup=reply_markup,
+                    performer=response_json.get('artist') if response_json.get(
+                        'artist') else response_json.get('channel'),
+                    title=response_json.get('track') if response_json.get(
+                        'track') else response_json.get('title'),
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    reply_to_message_id=update.message.reply_to_message.id,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        Translation.UPLOAD_START,
+                        client.translation.UPLOAD_START,
                         update.message,
                         start_time
                     )
@@ -272,12 +259,11 @@ async def youtube_dl_call_back(bot, update):
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    parse_mode="HTML",
-                    # reply_markup=reply_markup,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    parse_mode=enums.ParseMode.HTML,
+                    reply_to_message_id=update.message.reply_to_message.id,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        Translation.UPLOAD_START,
+                        client.translation.UPLOAD_START,
                         update.message,
                         start_time
                     )
@@ -289,10 +275,10 @@ async def youtube_dl_call_back(bot, update):
                     duration=duration,
                     length=width,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    reply_to_message_id=update.message.reply_to_message.id,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        Translation.UPLOAD_START,
+                        client.translation.UPLOAD_START,
                         update.message,
                         start_time
                     )
@@ -302,32 +288,27 @@ async def youtube_dl_call_back(bot, update):
                     chat_id=update.message.chat.id,
                     video=download_directory,
                     caption=description,
-                    parse_mode="HTML",
+                    parse_mode=enums.ParseMode.HTML,
                     duration=duration,
                     width=width,
                     height=height,
                     supports_streaming=True,
-                    # reply_markup=reply_markup,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    reply_to_message_id=update.message.reply_to_message.id,
                     progress=progress_for_pyrogram,
                     progress_args=(
-                        Translation.UPLOAD_START,
+                        client.translation.UPLOAD_START,
                         update.message,
                         start_time
                     )
                 )
-            else:
-                logger.info("Did this happen? :\\")
             end_two = datetime.now()
             time_taken_for_upload = (end_two - end_one).seconds
             #
-            media_album_p = []
+            media_album_p: list[InputMediaPhoto] = []
             if images is not None:
                 i = 0
-                caption = "© @xTeamBots"
-                if is_w_f:
-                    caption = "@xurluploaderbot"
+                caption = "@xurluploader"
                 for image in images:
                     if os.path.exists(str(image)):
                         if i == 0:
@@ -335,7 +316,7 @@ async def youtube_dl_call_back(bot, update):
                                 InputMediaPhoto(
                                     media=image,
                                     caption=caption,
-                                    parse_mode="html"
+                                    parse_mode=enums.ParseMode.HTML
                                 )
                             )
                         else:
@@ -345,21 +326,21 @@ async def youtube_dl_call_back(bot, update):
                                 )
                             )
                         i = i + 1
-            await bot.send_media_group(
-                chat_id=update.message.chat.id,
-                disable_notification=True,
-                reply_to_message_id=update.message.message_id,
-                media=media_album_p
-            )
-            #
-            try:
-                shutil.rmtree(tmp_directory_for_each_user)
+                await bot.send_media_group(
+                    chat_id=update.message.chat.id,
+                    disable_notification=True,
+                    reply_to_message_id=update.message.id,
+                    media=media_album_p
+                )
+                for photo in media_album_p:
+                    os.remove(photo.media)
+            os.remove(download_directory)
+            if not client.custom_thumbnail.get(update.from_user.id):
                 os.remove(thumb_image_path)
-            except:
-                pass
             await bot.edit_message_text(
-                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
+                text=client.translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(
+                    time_taken_for_download, time_taken_for_upload),
                 chat_id=update.message.chat.id,
-                message_id=update.message.message_id,
+                message_id=update.message.id,
                 disable_web_page_preview=True
             )

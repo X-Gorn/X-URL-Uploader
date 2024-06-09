@@ -2,19 +2,11 @@
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 
-# the logging things
-import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 
-import os
 import requests
-
-def DetectFileSize(url):
-    r = requests.get(url, allow_redirects=True, stream=True)
-    total_size = int(r.headers.get("content-length", 0))
-    return total_size
+import time
+import os
+from .display_progress import humanbytes
 
 
 def DownLoadFile(url, file_name, chunk_size, client, ud_type, message_id, chat_id):

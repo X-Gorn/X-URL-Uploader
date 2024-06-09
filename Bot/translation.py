@@ -1,12 +1,9 @@
-class Translation(object):
-    START_TEXT = """Hi {},
-I'm X-URL-Uploader!
-You can upload HTTP/HTTPS direct link, Using this bot!
 
-/help for more details!"""
+
+class Translation(object):
+    START_TEXT = "Hi {},\nI'm X-URL-Uploader!\nYou can upload HTTP/HTTPS direct link using this bot!\n\n/help for more details!"
     FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a> \nIf you want to set custom thumbnail, send photo before or quickly after tapping on any of the below buttons.\nYou can use /deletethumbnail to delete the auto-generated thumbnail."
-    SET_CUSTOM_USERNAME_PASSWORD = """If you want to download premium videos, provide in the following format:
-URL | filename | username | password"""
+    SET_CUSTOM_USERNAME_PASSWORD = "If you want to download premium videos, provide in the following format:\nURL | filename | username | password"
     DOWNLOAD_START = "Now Downloading.."
     UPLOAD_START = "Now Uploading.."
     RCHD_TG_API_LIMIT = "Downloaded in {} seconds.\nDetected File Size: {}\nSorry. But, I cannot upload files greater than 2GB due to Telegram API limitations."
@@ -16,17 +13,7 @@ URL | filename | username | password"""
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_VOID_FORMAT_FOUND = "ERROR...\n<b>YouTubeDL</b> said: {}"
-    HELP_USER = """How to Use Me? Follow These steps!
-    
-1. Send url (example.domain/File.mp4 | New Filename.mp4).
-2. Send Image As Custom Thumbnail (Optional).
-3. Select the button.
-   SVideo - Give File as video with Screenshots
-   DFile  - Give File (video) as file with Screenshots
-   Video  - Give File as video without Screenshots
-   File   - Give File without Screenshots
-
-If bot didn't respond, contact @xgorn"""
+    HELP_USER = "How to Use.\n\n1. Send url (example.domain/File.mp4 | New Filename.mp4).\n2. Send Image As Custom Thumbnail (Optional).\n3. Select the button.\n   SVideo - Give File as video with Screenshots\n   DFile  - Give File (video) as file with Screenshots\n   Video  - Give File as video without Screenshots\n   File   - Give File without Screenshots\n\nIf bot didn't respond, contact @xgorn"
     REPLY_TO_MEDIA_ALBUM_TO_GEN_THUMB = "Reply /genthumbnail to a media album, to generate custom thumbnail"
     ERR_ONLY_TWO_MEDIA_IN_ALBUM = "Media Album should contain only two photos. Please re-send the media album, and then try again, or send only two photos in an album."
     CANCEL_STR = "Process Cancelled"
