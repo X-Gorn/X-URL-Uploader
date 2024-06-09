@@ -44,7 +44,6 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
             revoke=True
         )
         return False
-    youtube_dl_url = update.message.reply_to_message.text
     custom_file_name = str(response_json.get("title")) + \
         "_" + youtube_dl_format + "." + youtube_dl_ext
     youtube_dl_username = None
@@ -97,7 +96,8 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
     if "fulltitle" in response_json:
         description = response_json["fulltitle"][0:1021]
         # escape Markdown and special characters
-    description = client.custom_caption.get(update.from_user.id) if client.custom_caption.get(update.from_user.id) else description
+    description = client.custom_caption.get(
+        update.from_user.id) if client.custom_caption.get(update.from_user.id) else description
     tmp_directory_for_each_user = client.config.DOWNLOAD_LOCATION + \
         "/" + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
@@ -234,7 +234,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
-                await bot.send_audio(
+                media = await bot.send_audio(
                     chat_id=update.message.chat.id,
                     audio=download_directory,
                     caption=description,
@@ -254,7 +254,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                     )
                 )
             elif tg_send_type == "file":
-                await bot.send_document(
+                media = await bot.send_document(
                     chat_id=update.message.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
@@ -269,7 +269,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                     )
                 )
             elif tg_send_type == "vm":
-                await bot.send_video_note(
+                media = await bot.send_video_note(
                     chat_id=update.message.chat.id,
                     video_note=download_directory,
                     duration=duration,
@@ -284,7 +284,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                     )
                 )
             elif tg_send_type == "video":
-                await bot.send_video(
+                media = await bot.send_video(
                     chat_id=update.message.chat.id,
                     video=download_directory,
                     caption=description,
@@ -302,13 +302,14 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                         start_time
                     )
                 )
+            if client.config.DUMP_ID:
+                await media.copy(client.config.DUMP_ID, caption=f'User Name: {update.from_user.first_name}\nUser ID: {update.from_user.id}\nLink: {youtube_dl_url}')
             end_two = datetime.now()
             time_taken_for_upload = (end_two - end_one).seconds
-            #
             media_album_p: list[InputMediaPhoto] = []
             if images is not None:
                 i = 0
-                caption = "@xurluploader"
+                caption = "@xurluploaderbot"
                 for image in images:
                     if os.path.exists(str(image)):
                         if i == 0:
@@ -326,12 +327,14 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                                 )
                             )
                         i = i + 1
-                await bot.send_media_group(
+                media_group = await bot.send_media_group(
                     chat_id=update.message.chat.id,
                     disable_notification=True,
                     reply_to_message_id=update.message.id,
                     media=media_album_p
                 )
+                if client.config.DUMP_ID:
+                    await bot.copy_media_group(client.config.DUMP_ID, from_chat_id=update.from_user.id, message_id=media_group[0].media_group_id, captions=f'User Name: {update.from_user.first_name}\nUser ID: {update.from_user.id}\nLink: {youtube_dl_url}')
                 for photo in media_album_p:
                     os.remove(photo.media)
             os.remove(download_directory)

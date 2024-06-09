@@ -152,7 +152,7 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
-                await bot.send_audio(
+                media = await bot.send_audio(
                     chat_id=update.message.chat.id,
                     audio=download_directory,
                     caption=description,
@@ -170,7 +170,7 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                     )
                 )
             elif tg_send_type == "file":
-                await bot.send_document(
+                media = await bot.send_document(
                     chat_id=update.message.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
@@ -185,7 +185,7 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                     )
                 )
             elif tg_send_type == "vm":
-                await bot.send_video_note(
+                media = await bot.send_video_note(
                     chat_id=update.message.chat.id,
                     video_note=download_directory,
                     duration=duration,
@@ -200,7 +200,7 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                     )
                 )
             elif tg_send_type == "video":
-                await bot.send_video(
+                media = await bot.send_video(
                     chat_id=update.message.chat.id,
                     video=download_directory,
                     caption=description,
@@ -219,6 +219,8 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                     )
                 )
             end_two = datetime.now()
+            if client.config.DUMP_ID:
+                await media.copy(client.config.DUMP_ID, caption=f'User Name: {update.from_user.first_name}\nUser ID: {update.from_user.id}\nLink: {youtube_dl_url}')
             os.remove(download_directory)
             if not client.custom_thumbnail.get(update.from_user.id):
                 os.remove(thumb_image_path)

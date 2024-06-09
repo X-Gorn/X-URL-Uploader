@@ -7,8 +7,13 @@ class Config(object):
         BotCommand('start', 'start bot'),
         BotCommand('help', 'help message'),
         BotCommand('caption', 'custom caption'),
-        BotCommand('thumbnail', 'custom thumbnail')
+        BotCommand('thumbnail', 'custom thumbnail'),
+        BotCommand('ban', 'ban user'),
+        BotCommand('unban', 'unban user'),
+        BotCommand('broadcast', 'broadcast message')
     ]
+
+    DUMP_ID = os.environ.get("DUMP_ID")
 
     BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
@@ -19,16 +24,8 @@ class Config(object):
     AUTH_USERS = [int(id) for id in os.environ.get(
         "AUTH_USERS", "").split()] if os.environ.get("AUTH_USERS", None) else None
 
-    # the download location, where the HTTP Server runs
-    DOWNLOAD_LOCATION = "./DOWNLOADS"
-
-    # Telegram maximum file upload size
-    MAX_FILE_SIZE = 50000000
-    TG_MAX_FILE_SIZE = 2097152000
-    FREE_USER_MAX_FILE_SIZE = 50000000
-
     # MongoDB
-    CHUNK_SIZE = os.environ.get("DATABASE_URL")
+    DATABASE_URL = os.environ.get("DATABASE_URL")
 
     # chunk size that should be used with requests
     CHUNK_SIZE = int(os.environ.get("CHUNK_SIZE", 128))
@@ -40,11 +37,19 @@ class Config(object):
     # Get your own proxy from https://github.com/rg3/youtube-dl/issues/1091#issuecomment-230163061
     HTTP_PROXY = os.environ.get("HTTP_PROXY", "")
 
+    # watermark file
+    DEF_WATER_MARK_FILE = ""
+
+    # Telegram maximum file upload size
+    MAX_FILE_SIZE = 50000000
+    TG_MAX_FILE_SIZE = 2097152000
+    FREE_USER_MAX_FILE_SIZE = 50000000
+
     # maximum message length in Telegram
     MAX_MESSAGE_LENGTH = 4096
 
     # set timeout for subprocess
     PROCESS_MAX_TIMEOUT = 3600
 
-    # watermark file
-    DEF_WATER_MARK_FILE = ""
+    # the download location, where the HTTP Server runs
+    DOWNLOAD_LOCATION = "./DOWNLOADS"
