@@ -1,5 +1,9 @@
 import os
 from pyrogram.types import BotCommand
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 class Config(object):
