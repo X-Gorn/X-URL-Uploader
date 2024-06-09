@@ -1,12 +1,11 @@
 import traceback
 from .. import client
-from ..functions import filters as myFilters
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait, Forbidden, BadRequest
 
 
-@Client.on_message(filters.private & filters.command('broadcast') & filters.reply & myFilters.database & filters.user(users=client.config.OWNER_ID))
+@Client.on_message(filters.private & filters.command('broadcast') & filters.reply & client.filters.database & filters.user(users=client.config.OWNER_ID))
 async def broadcast(bot: Client, update: Message):
     message = await update.reply(text='Broadcast started...')
     async for user in client.database.xurluploader.users.find({}):
@@ -26,12 +25,12 @@ async def broadcast(bot: Client, update: Message):
     await message.edit(text='Broadcast done.')
 
 
-@Client.on_message(filters.private & filters.command('broadcast') & ~filters.reply & myFilters.database & filters.user(users=client.config.OWNER_ID))
+@Client.on_message(filters.private & filters.command('broadcast') & ~filters.reply & client.filters.database & filters.user(users=client.config.OWNER_ID))
 async def broadcast_no_reply(bot: Client, update: Message):
     await update.reply('Reply to a message.')
 
 
-@Client.on_message(filters.private & filters.command('ban') & myFilters.database & filters.user(users=client.config.OWNER_ID))
+@Client.on_message(filters.private & filters.command('ban') & client.filters.database & filters.user(users=client.config.OWNER_ID))
 async def ban(bot: Client, update: Message):
     try:
         user_id = int(update.command[1])
@@ -47,7 +46,7 @@ async def ban(bot: Client, update: Message):
             await update.reply('User ID is not exist in database.')
 
 
-@Client.on_message(filters.private & filters.command('unban') & myFilters.database & filters.user(users=client.config.OWNER_ID))
+@Client.on_message(filters.private & filters.command('unban') & client.filters.database & filters.user(users=client.config.OWNER_ID))
 async def unban(bot: Client, update: Message):
     try:
         user_id = int(update.command[1])
