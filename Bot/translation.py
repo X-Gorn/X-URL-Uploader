@@ -2,10 +2,10 @@
 
 class Translation(object):
     START_TEXT = "Hi {},\nI'm X-URL-Uploader!\nYou can upload HTTP/HTTPS direct link using this bot!\n\n/help for more details!"
-    FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a> \nIf you want to set custom thumbnail, send photo before or quickly after tapping on any of the below buttons.\nYou can use /deletethumbnail to delete the auto-generated thumbnail."
+    FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a>"
     SET_CUSTOM_USERNAME_PASSWORD = "If you want to download premium videos, provide in the following format:\nURL | filename | username | password"
-    DOWNLOAD_START = "Now Downloading.."
-    UPLOAD_START = "Now Uploading.."
+    DOWNLOAD_START = "Downloading..."
+    UPLOAD_START = "Uploading..."
     RCHD_TG_API_LIMIT = "Downloaded in {} seconds.\nDetected File Size: {}\nSorry. But, I cannot upload files greater than 2GB due to Telegram API limitations."
     AFTER_SUCCESSFUL_UPLOAD_MSG = "Thanks for using @xurluploaderbot)"
     AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = "Downloaded in {} seconds.\nUploaded in {} seconds.\n\n@xurluploaderbot"

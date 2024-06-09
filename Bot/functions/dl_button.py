@@ -129,7 +129,7 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                 if client.guess_mime_type(download_directory) in ffmpeg_supported_video_mimetypes:
                     await run_cmd('ffmpeg -ss {} -i "{}" -vframes 1 "{}"'.format(random.randint(0, duration), download_directory, thumb_image_path))
             # get the correct width, height, and duration for videos greater than 10MB
-            if os.path.exists(thumb_image_path):
+            if os.path.exists(thumb_image_path) and not client.custom_thumbnail.get(update.from_user.id):
                 width = 0
                 height = 0
                 metadata = extractMetadata(createParser(thumb_image_path))

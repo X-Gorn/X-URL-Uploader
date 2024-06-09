@@ -244,7 +244,7 @@ async def echo_http(bot: Client, update: Message):
             if response_json["thumbnail"] is not None:
                 thumbnail = response_json["thumbnail"]
                 thumbnail_image = response_json["thumbnail"]
-        if not client.custom_thumbnail:
+        if not client.custom_thumbnail.get(update.from_user.id):
             thumb_image_path = client.config.DOWNLOAD_LOCATION + \
                 "/" + str(update.from_user.id) + ".webp"
             await download_coroutine(
