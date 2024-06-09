@@ -7,13 +7,11 @@ from aiohttp import ClientSession
 from typing import Union
 from .config import Config
 from .translation import Translation
-from .filters import Filter
 
 
 class BotClient(Client):
 
     def __init__(self):
-        self.filters = Filter
         self.sleep = asyncio.sleep
         self.session: ClientSession = None
         self.config = Config

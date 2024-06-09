@@ -13,6 +13,7 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from PIL import Image
 from ..functions.download import download_coroutine
 from ..functions.display_progress import humanbytes
+from ..functions.filters import Filter
 from .. import client
 
 
@@ -21,7 +22,7 @@ URL_REGEX = re.compile(
     pattern=r'(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*))(.*)?')
 
 
-@Client.on_message(filters.private & filters.regex(pattern=URL_REGEX) & client.filters.auth_users)
+@Client.on_message(filters.private & filters.regex(pattern=URL_REGEX) & Filter.auth_users)
 async def echo_http(bot: Client, update: Message):
     if client.database:
         user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})

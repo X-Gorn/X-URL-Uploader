@@ -2,6 +2,7 @@ from .. import client
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from ..functions.helper import URL_REGEX, run_cmd
+from ..functions.filters import Filter
 
 
 async def reply_to_photo_filter(_, __, m: Message):
@@ -12,7 +13,7 @@ async def no_args_filter(_, __, m: Message):
     return True if len(m.command) == 1 else False
 
 
-@Client.on_message(filters.private & filters.command('caption') & client.filters.auth_users)
+@Client.on_message(filters.private & filters.command('caption') & Filter.auth_users)
 async def custom_caption(bot: Client, update: Message):
     if client.database:
         user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
@@ -34,7 +35,7 @@ async def custom_caption(bot: Client, update: Message):
     client.custom_caption[update.from_user.id] = caption
 
 
-@Client.on_message(filters.private & filters.command('thumbnail') & ~filters.reply & (filters.regex(pattern=URL_REGEX) | filters.create(no_args_filter)) & client.filters.auth_users)
+@Client.on_message(filters.private & filters.command('thumbnail') & ~filters.reply & (filters.regex(pattern=URL_REGEX) | filters.create(no_args_filter)) & Filter.auth_users)
 async def custom_thumbnail(bot: Client, update: Message):
     if client.database:
         user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
@@ -59,7 +60,7 @@ async def custom_thumbnail(bot: Client, update: Message):
     client.custom_thumbnail[update.from_user.id] = thumbnail
 
 
-@Client.on_message(filters.private & filters.command('thumbnail') & filters.reply & filters.create(reply_to_photo_filter) & client.filters.auth_users)
+@Client.on_message(filters.private & filters.command('thumbnail') & filters.reply & filters.create(reply_to_photo_filter) & Filter.auth_users)
 async def custom_thumbnail_reply(bot: Client, update: Message):
     client.custom_thumbnail[update.from_user.id] = await update.reply_to_message.download(file_name=f'{client.config.DOWNLOAD_LOCATION}/{update.from_user.id}.jpg')
     await update.reply(text='Custom thumbnail updated.')
