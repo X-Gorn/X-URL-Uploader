@@ -1,20 +1,34 @@
+import traceback
 from .. import client
 from ..functions import filters as myFilters
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, Forbidden, BadRequest
 
 
 @Client.on_message(filters.private & filters.command('broadcast') & filters.reply & myFilters.database & filters.chat(chats=client.config.OWNER_ID))
 async def broadcast(bot: Client, update: Message):
     message = await update.reply(text='Broadcast started...')
-    for user in client.database.xurluploader.users.find({}):
+    async for user in client.database.xurluploader.users.find({}):
         try:
             await update.reply_to_message.copy(user['id'])
         except FloodWait as e:
             await client.sleep(e.value)
             await update.reply_to_message.copy(user['id'])
+        except Forbidden:
+            client.logger.warning(
+                'Broadcast: Forbidden - {}'.format(user['id']))
+        except BadRequest:
+            client.logger.warning(
+                'Broadcast: BadRequest - {}'.format(user['id']))
+        except Exception:
+            client.logger.warning(traceback.format_exc())
     await message.edit(text='Broadcast done.')
+
+
+@Client.on_message(filters.private & filters.command('broadcast') & ~filters.reply & myFilters.database & filters.chat(chats=client.config.OWNER_ID))
+async def broadcast_no_reply(bot: Client, update: Message):
+    await update.reply('Reply to a message.')
 
 
 @Client.on_message(filters.private & filters.command('ban') & myFilters.database & filters.chat(chats=client.config.OWNER_ID))
@@ -26,7 +40,11 @@ async def ban(bot: Client, update: Message):
     except ValueError:
         await update.reply('ID should be an integer.\n\nExample: /ban 12345')
     else:
-        await client.database.xurluploader.users.update_one({'id': user_id}, {'$set': {'banned': True}})
+        result = await client.database.xurluploader.users.update_one({'id': user_id}, {'$set': {'banned': True}})
+        if result.raw_result['updatedExisting']:
+            await update.reply('User Banned')
+        else:
+            await update.reply('User ID is not exist in database.')
 
 
 @Client.on_message(filters.private & filters.command('unban') & myFilters.database & filters.chat(chats=client.config.OWNER_ID))
@@ -38,4 +56,8 @@ async def unban(bot: Client, update: Message):
     except ValueError:
         await update.reply('ID should be an integer.\n\nExample: /unban 12345')
     else:
-        await client.database.xurluploader.users.update_one({'id': user_id}, {'$set': {'banned': False}})
+        result = await client.database.xurluploader.users.update_one({'id': user_id}, {'$set': {'banned': False}})
+        if result.raw_result['updatedExisting']:
+            await update.reply('User Unbanned')
+        else:
+            await update.reply('User ID is not exist in database.')

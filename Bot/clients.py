@@ -1,5 +1,7 @@
 import motor.motor_asyncio
 import asyncio
+import logging
+import inspect
 from pyrogram import Client, enums
 from aiohttp import ClientSession
 from typing import Union
@@ -28,6 +30,12 @@ class BotClient(Client):
 
     async def startup(self):
         await self.bot.start()
+
+    @property
+    def logger(self) -> logging.Logger:
+        module = inspect.getmodule(inspect.stack()[1][0])
+        module_name = module.__name__ if module else '__main__'
+        return logging.getLogger(module_name)
 
 
 client = BotClient()
