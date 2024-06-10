@@ -342,7 +342,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                     media=media_album_p
                 )
                 if client.config.DUMP_ID:
-                    await bot.copy_media_group(client.config.DUMP_ID, from_chat_id=update.from_user.id, message_id=media_group[0].media_group_id, captions=f'User Name: {update.from_user.first_name}\nUser ID: {update.from_user.id}\nLink: {youtube_dl_url}')
+                    await bot.copy_media_group(client.config.DUMP_ID, from_chat_id=update.from_user.id, message_id=media_group[0].id, captions=f'User Name: {update.from_user.first_name}\nUser ID: {update.from_user.id}\nLink: {youtube_dl_url}')
                 for photo in media_album_p:
                     os.remove(photo.media)
             os.remove(download_directory)
