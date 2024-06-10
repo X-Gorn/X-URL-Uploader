@@ -1,3 +1,4 @@
+import os
 from .. import client
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -55,6 +56,8 @@ async def custom_thumbnail(bot: Client, update: Message):
             return await update.reply(
                 text='Reply to a photo or `/thumbnail https.....jpg`'
             )
+        if os.path.isfile(client.custom_thumbnail[update.from_user.id]):
+            os.remove(client.custom_thumbnail[update.from_user.id])
         thumbnail = None
         await update.reply(text='Custom thumbnail cleared.')
     client.custom_thumbnail[update.from_user.id] = thumbnail
@@ -62,5 +65,12 @@ async def custom_thumbnail(bot: Client, update: Message):
 
 @Client.on_message(filters.private & filters.command('thumbnail') & filters.reply & filters.create(reply_to_photo_filter) & Filter.auth_users)
 async def custom_thumbnail_reply(bot: Client, update: Message):
+    if client.database:
+        user = await client.database.xurluploader.users.find_one({'id': update.from_user.id})
+        if not user:
+            user = await client.database.xurluploader.users.insert_one({'id': update.from_user.id, 'banned': False})
+        else:
+            if user.get('banned'):
+                return await update.reply('You are banned.')
     client.custom_thumbnail[update.from_user.id] = await update.reply_to_message.download(file_name=f'{client.config.DOWNLOAD_LOCATION}/{update.from_user.id}.jpg')
     await update.reply(text='Custom thumbnail updated.')

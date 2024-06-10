@@ -208,7 +208,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                 if client.guess_mime_type(download_directory) in ffmpeg_supported_video_mimetypes:
                     await run_cmd('ffmpeg -ss {} -i "{}" -vframes 1 "{}"'.format(random.randint(0, duration), download_directory, thumb_image_path))
             # get the correct width, height, and duration for videos greater than 10MB
-            if os.path.exists(thumb_image_path) and not client.custom_thumbnail.get(update.from_user.id):
+            if os.path.exists(thumb_image_path):
                 width = 0
                 height = 0
                 metadata = extractMetadata(createParser(thumb_image_path))
@@ -236,6 +236,7 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                 thumb_image_path = None
             start_time = time.time()
             # try to upload file
+            client.logger.info(thumb_image_path)
             if tg_send_type == "audio":
                 media = await bot.send_audio(
                     chat_id=update.message.chat.id,
