@@ -168,7 +168,12 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
         try:
             file_size = os.stat(download_directory).st_size
         except FileNotFoundError:
-            download_directory = download_directory + "." + "mkv"
+            if os.path.isfile(download_directory + "." + "mkv"):
+                download_directory = download_directory + "." + "mkv"
+            elif os.path.isfile(download_directory + "." + "webm"):
+                download_directory = download_directory + "." + "webm"
+            else:
+                return await update.message.edit(text='File not found in the directory.')
             # https://stackoverflow.com/a/678242/4723940
             file_size = os.stat(download_directory).st_size
         if file_size > client.config.TG_MAX_FILE_SIZE:
@@ -313,14 +318,13 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
             media_album_p: list[InputMediaPhoto] = []
             if images:
                 i = 0
-                caption = "@xurluploaderbot"
                 for image in images:
                     if os.path.exists(str(image)):
                         if i == 0:
                             media_album_p.append(
                                 InputMediaPhoto(
                                     media=image,
-                                    caption=caption,
+                                    caption=bot.me.first_name,
                                     parse_mode=enums.ParseMode.HTML
                                 )
                             )
@@ -343,7 +347,8 @@ async def youtube_dl_call_back(bot: Client, update: CallbackQuery):
                     os.remove(photo.media)
             os.remove(download_directory)
             if not client.custom_thumbnail.get(update.from_user.id):
-                os.remove(thumb_image_path)
+                if thumb_image_path and os.path.isfile(thumb_image_path):
+                    os.remove(thumb_image_path)
             await bot.edit_message_text(
                 text=client.translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(
                     time_taken_for_download, time_taken_for_upload),

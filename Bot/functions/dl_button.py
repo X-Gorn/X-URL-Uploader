@@ -163,9 +163,6 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                     audio=download_directory,
                     caption=description,
                     duration=duration,
-                    # performer=response_json["uploader"],
-                    # title=response_json["title"],
-                    # reply_markup=reply_markup,
                     thumb=thumb_image_path,
                     reply_to_message_id=update.message.reply_to_message.id,
                     progress=progress_for_pyrogram,
@@ -181,7 +178,6 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    # reply_markup=reply_markup,
                     reply_to_message_id=update.message.reply_to_message.id,
                     progress=progress_for_pyrogram,
                     progress_args=(
@@ -214,7 +210,6 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                     width=width,
                     height=height,
                     supports_streaming=True,
-                    # reply_markup=reply_markup,
                     thumb=thumb_image_path,
                     reply_to_message_id=update.message.reply_to_message.id,
                     progress=progress_for_pyrogram,
@@ -229,7 +224,8 @@ async def ddl_call_back(bot: Client, update: CallbackQuery):
                 await media.copy(client.config.DUMP_ID, caption=f'User Name: {update.from_user.first_name}\nUser ID: {update.from_user.id}\nLink: {youtube_dl_url}')
             os.remove(download_directory)
             if not client.custom_thumbnail.get(update.from_user.id):
-                os.remove(thumb_image_path)
+                if thumb_image_path and os.path.isfile(thumb_image_path):
+                    os.remove(thumb_image_path)
             time_taken_for_download = (end_one - start).seconds
             time_taken_for_upload = (end_two - end_one).seconds
             await bot.edit_message_text(
